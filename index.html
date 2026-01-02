@@ -223,6 +223,7 @@
                         <div class="inp-label">APP TITLE</div> <input type="text" class="inp-field" id="cfgTitle">
                         <div class="inp-label">SUBTITLE</div> <input type="text" class="inp-field" id="cfgSub">
                         <div class="inp-label">BG URL</div> <input type="text" class="inp-field" id="cfgBg">
+                        <div class="inp-label">PROFILE URL</div> <input type="text" class="inp-field" id="cfgProf">
                     </div>
 
                     <div class="cfg-section">
@@ -568,6 +569,7 @@
             document.getElementById('cfgTitle').value = c.UI?.Title || "";
             document.getElementById('cfgSub').value = c.UI?.Subtitle || "";
             document.getElementById('cfgBg').value = c.UI?.BackgroundUrl || "";
+            document.getElementById('cfgProf').value = c.UI?.ProfileUrl || "";
             document.getElementById('cfgVer').value = c.AppVersion || "1.0";
             document.getElementById('urlUpdate').value = c.UpdateUrl || "";
             document.getElementById('annShow').checked = c.Announcement?.Show || false;
@@ -584,6 +586,7 @@
             c.UI.Title = document.getElementById('cfgTitle').value;
             c.UI.Subtitle = document.getElementById('cfgSub').value;
             c.UI.BackgroundUrl = document.getElementById('cfgBg').value;
+            c.UI.ProfileUrl = document.getElementById('cfgProf').value;
             c.AppVersion = document.getElementById('cfgVer').value;
             c.UpdateUrl = document.getElementById('urlUpdate').value;
             c.Announcement.Show = document.getElementById('annShow').checked;
