@@ -8,57 +8,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- CORE VARIABLES (DEFAULT: CYBERPUNK) --- */
+        /* --- CORE VARIABLES --- */
         :root {
             --bg: #050508; --card: #0e0e14; --nav: #161621; 
             --accent: #00e5ff; --text: #ffffff; --muted: #94a3b8; 
             --border: rgba(255, 255, 255, 0.08); 
             --green: #00ff9d; --red: #ff0055; --warn: #f59e0b;
-            --font-main: 'Outfit', sans-serif;
             --glass: blur(12px) saturate(180%);
         }
 
-        /* --- THEME DEFINITIONS --- */
-        /* Green / Hacker */
-        [data-theme="Matrix"] { --bg:#000000; --card:#051a05; --nav:#001100; --accent:#00ff00; --text:#aaffaa; --font-main:'JetBrains Mono'; }
-        [data-theme="Hacker"] { --bg:#0f0f0f; --card:#1a1a1a; --nav:#222; --accent:#39ff14; --muted:#555; }
-        [data-theme="Toxic"] { --bg:#1a051a; --card:#2b0a2b; --nav:#220022; --accent:#ccff00; --text:#f0f0f0; }
-        [data-theme="Neon"] { --bg:#000; --card:#111; --nav:#151515; --accent:#ccff00; --border:rgba(204,255,0,0.3); }
-
-        /* Red / Pink */
-        [data-theme="Cherry"] { --bg:#1a0505; --card:#2b0a0a; --nav:#360000; --accent:#ff0033; --green:#ff3333; }
-        [data-theme="Love"] { --bg:#1a0510; --card:#2b0a1a; --nav:#360011; --accent:#ff69b4; --text:#fff0f5; }
-        [data-theme="Sakura"] { --bg:#2b1b20; --card:#3d262d; --nav:#4a2e36; --accent:#ffb7c5; }
-        [data-theme="Peach"] { --bg:#1a1005; --card:#2b1a0a; --nav:#362000; --accent:#ffaa66; }
-        [data-theme="Christmas"] { --bg:#051a05; --card:#0a2b0a; --nav:#003600; --accent:#ff0000; --green:#00ff00; }
-        [data-theme="Hell"] { --bg:#0f0000; --card:#1f0000; --nav:#2d0000; --accent:#ff3300; --border:rgba(255,51,0,0.2); }
-        [data-theme="Fire"] { --bg:#0f0800; --card:#1f1000; --nav:#2d1800; --accent:#ff4500; }
-        [data-theme="Magma"] { --bg:#111; --card:#1a1a1a; --nav:#222; --accent:#ff5500; --text:#ddd; }
-
-        /* Blue / Ice */
-        [data-theme="Moon"] { --bg:#05051a; --card:#0a0a2b; --nav:#000036; --accent:#6699ff; }
-        [data-theme="Ice"] { --bg:#0a151a; --card:#10252b; --nav:#153036; --accent:#aaddff; }
-        [data-theme="Rain"] { --bg:#0f121a; --card:#1a1f2b; --nav:#222836; --accent:#4a6fa5; --muted:#6c7a89; }
-        [data-theme="Ocean"] { --bg:#00111a; --card:#002233; --nav:#00334d; --accent:#00ccff; }
-        [data-theme="Storm"] { --bg:#101012; --card:#1a1a1f; --nav:#222229; --accent:#5e5eff; }
-        [data-theme="Cyberpunk"] { /* Default */ }
-
-        /* Other */
-        [data-theme="White"] { --bg:#f0f2f5; --card:#ffffff; --nav:#ffffff; --accent:#007bff; --text:#1c1e21; --muted:#65676b; --border:rgba(0,0,0,0.1); }
-        [data-theme="Sunset"] { --bg:#1a0515; --card:#2b0a22; --nav:#36002b; --accent:#ff9900; }
-        [data-theme="Bubblegum"] { --bg:#1a0515; --card:#2b0a22; --nav:#36002b; --accent:#ff66cc; }
-        [data-theme="Violet"] { --bg:#0f001a; --card:#1f0033; --nav:#2d004d; --accent:#9933ff; }
-        [data-theme="Galaxy"] { --bg:#05000f; --card:#0a001f; --nav:#110033; --accent:#dcb3ff; }
-        [data-theme="Gold"] { --bg:#0f0d00; --card:#1f1a00; --nav:#2d2600; --accent:#ffd700; }
-
+        /* Admin Panel Themes (For the panel itself) */
+        [data-theme="blood"] { --bg:#1a0505; --card:#2b0a0a; --nav:#360000; --accent:#ff0033; --green:#ff3333; --red:#ff0033; }
+        [data-theme="matrix"] { --bg:#000000; --card:#051a05; --nav:#001100; --accent:#00ff00; --green:#00ff00; --red:#008800; }
+        [data-theme="naruto"] { --bg:#0f0800; --card:#1a0f00; --nav:#291600; --accent:#ff9900; --green:#ffcc00; --red:#ff4500; }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
-        body { margin: 0; padding: 0; font-family: var(--font-main); background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 120px; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+        body { margin: 0; padding: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 120px; overflow-x: hidden; transition: background 0.3s; }
         
         #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
         /* --- HEADER --- */
-        header { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.05); backdrop-filter: var(--glass); border-bottom: 1px solid var(--border); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; }
+        header { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.7); backdrop-filter: var(--glass); border-bottom: 1px solid var(--border); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; }
         .brand { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
         .brand i { color: var(--accent); filter: drop-shadow(0 0 8px var(--accent)); }
         
@@ -73,7 +43,7 @@
         .controls { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; }
         .search-box { position: relative; flex: 1; }
         .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-        .input-glass { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 14px 14px 14px 44px; color: var(--text); border-radius: 14px; font-family: var(--font-main); font-size: 0.95rem; }
+        .input-glass { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 14px 14px 14px 44px; color: var(--text); border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 0.95rem; }
         .input-glass:focus { border-color: var(--accent); }
 
         .btn-gradient { background: linear-gradient(135deg, var(--accent), var(--green)); color: #000; border: none; padding: 0 20px; height: 48px; border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 5px 15px -5px var(--accent); }
@@ -82,7 +52,7 @@
         .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 12px; position: relative; backdrop-filter: blur(10px); transition: 0.2s; }
         
         .key-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text); font-size: 1rem; word-break: break-all; }
+        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; font-size: 1rem; word-break: break-all; }
         
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
         .badge.dur { background: rgba(0, 229, 255, 0.15); color: var(--accent); }
@@ -104,45 +74,37 @@
         .cfg-head { color: var(--accent); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
         
         .inp-label { display: block; color: var(--muted); font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; margin-top: 12px; }
-        .inp-field { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; color: var(--text); border-radius: 10px; font-family: var(--font-main); }
-        select.inp-field { background: var(--card); color: var(--text); }
-
-        .switch { position: relative; width: 44px; height: 24px; float: right; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 34px; transition: .3s; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: .3s; }
-        input:checked + .slider { background: var(--green); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
+        .inp-field { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; color: #fff; border-radius: 10px; font-family: 'Outfit', sans-serif; }
+        select.inp-field { color: #fff; background-color: rgba(255,255,255,0.05); }
+        select.inp-field option { background-color: #0e0e14; color: #fff; }
+        
         /* --- NAV DOCK --- */
         .nav-dock { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 500px; height: 75px; background: var(--nav); border: 1px solid var(--border); border-radius: 24px; display: flex; justify-content: space-evenly; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6); backdrop-filter: var(--glass); z-index: 100; padding: 0 10px; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); font-size: 1.2rem; transition: 0.3s; cursor: pointer; height: 100%; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); font-size: 1.2rem; transition: 0.3s; cursor: pointer; height: 100%; position: relative; }
         .nav-item.active { color: var(--accent); transform: translateY(-3px); }
         .nav-item.active i { filter: drop-shadow(0 0 8px var(--accent)); }
         .nav-lbl { font-size: 0.65rem; font-weight: 700; margin-top: 4px; opacity: 0.7; }
 
+        /* --- TYPE SELECTOR --- */
+        .type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .type-opt { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: 0.2s; color: var(--muted); }
+        .type-opt.selected { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 4px 12px -4px var(--accent); }
+
         /* --- MODALS --- */
         .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:200; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px); opacity:0; pointer-events:none; transition:0.3s; }
         .modal-wrap.open { opacity:1; pointer-events:all; }
-        .modal-card { background: var(--bg); width:90%; max-width:400px; padding:25px; border-radius: 24px; border: 1px solid var(--border); max-height: 85vh; overflow-y: auto; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        .modal-card { background: #121218; width:90%; max-width:400px; padding:25px; border-radius: 24px; border: 1px solid var(--border); max-height: 85vh; overflow-y: auto; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
         
         .detail-group { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid var(--border); }
         .detail-lbl { font-size: 0.7rem; color: var(--accent); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
-        .detail-val { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text); word-break: break-all; }
+        .detail-val { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #fff; word-break: break-all; }
         
-        /* Type Selector */
-        .type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .type-opt { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: 0.2s; color: var(--muted); }
-        .type-opt.selected { background: var(--accent); color: #000; border-color: var(--accent); }
-
-        /* Theme Grid */
-        .theme-cat { font-size: 0.75rem; color: var(--muted); font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .theme-btn { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text); font-size: 0.8rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; }
-        .theme-btn:hover { border-color: var(--accent); }
-        .theme-btn.active { background: var(--accent); color: #000; font-weight: 700; }
+        .device-list { margin-top: 5px; max-height: 150px; overflow-y: auto; }
+        .device-item { font-size: 0.75rem; padding: 8px 10px; background: rgba(0,0,0,0.3); border-radius: 6px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; border-left: 2px solid var(--muted); display: flex; justify-content: space-between; align-items: center; }
+        .device-item.active { border-left-color: var(--green); }
 
         .footer-brand { text-align: center; color: var(--muted); font-size: 0.7rem; margin-top: 30px; opacity: 0.5; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--nav); border: 1px solid var(--accent); padding: 12px 24px; border-radius: 50px; z-index: 300; display: flex; align-items: center; gap: 10px; transition: 0.4s; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
@@ -154,7 +116,7 @@
     <div id="setupView" style="display:none;">
         <i class="fas fa-cube" style="font-size: 3rem; color: var(--accent); margin-bottom: 20px;"></i>
         <h2 style="margin-bottom: 10px;">Setup DPAdmin</h2>
-        <input type="text" class="input-glass" id="setupInput" placeholder="Firebase URL" style="margin-bottom:15px; width:100%; max-width:300px;">
+        <input type="text" class="input-glass" id="setupInput" placeholder="https://your-app.firebaseio.com" style="margin-bottom:15px; width:100%; max-width:300px;">
         <button class="btn-gradient" style="width:100%; max-width:300px; justify-content:center;" onclick="saveSetupUrl()">CONNECT</button>
     </div>
 
@@ -162,7 +124,7 @@
         <header>
             <div class="brand"><i class="fas fa-shield-alt"></i> DPADMIN</div>
             <div style="display:flex; gap:10px;">
-                <div class="icon-btn" onclick="openThemeModal()"><i class="fas fa-palette"></i></div>
+                <div class="icon-btn" onclick="toggleTheme()"><i class="fas fa-palette"></i></div>
                 <div class="icon-btn" onclick="appInit(true)"><i class="fas fa-sync-alt"></i></div>
             </div>
         </header>
@@ -170,14 +132,14 @@
         <div class="container">
             <div id="loader" style="text-align: center; padding: 100px 0;">
                 <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--accent);"></i>
-                <p style="color: var(--muted); margin-top: 20px;">SYNCING...</p>
+                <p style="color: var(--muted); margin-top: 20px;">SYNCING DATA...</p>
             </div>
 
             <div id="tabKeys" class="hidden">
                 <div class="controls">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" class="input-glass" id="searchKey" placeholder="Search..." onkeyup="renderKeys()">
+                        <input type="text" class="input-glass" id="searchKey" placeholder="Search keys..." onkeyup="renderKeys()">
                     </div>
                     <button class="btn-gradient" onclick="openGenModal()"><i class="fas fa-plus"></i></button>
                 </div>
@@ -187,7 +149,7 @@
             <div id="tabDevices" class="hidden">
                 <div class="controls">
                     <div style="font-weight:700; font-size:1.1rem; flex:1;">Active Devices</div>
-                    <button class="btn-gradient" onclick="openAddDeviceModal()" style="padding:0 15px;"><i class="fas fa-link"></i> LINK</button>
+                    <button class="btn-gradient" onclick="openAddDeviceModal()" style="padding:0 15px;"><i class="fas fa-link"></i> LINK DEVICE</button>
                 </div>
                 <div id="deviceGlobalList"></div>
             </div>
@@ -196,25 +158,60 @@
                 <div class="glass-card">
                     <div class="cfg-section">
                         <div class="cfg-head"><i class="fas fa-paint-brush"></i> UI & STATUS</div>
+                        
                         <div class="inp-label">APP STATUS</div>
                         <select class="inp-field" id="cfgStatus">
                             <option value="Safe">Safe</option>
-                            <option value="Detected">Detected</option>
-                            <option value="Maintenance">Maintenance</option>
+                            <option value="Risk">Risk</option>
                         </select>
-                        <div class="inp-label">TITLE</div> <input type="text" class="inp-field" id="cfgTitle">
+
+                        <div class="inp-label">MENU THEME (CLIENT)</div>
+                        <select class="inp-field" id="cfgClientTheme">
+                            <optgroup label="Green / Hacker Styles">
+                                <option value="Matrix">Matrix</option>
+                                <option value="Hacker">Hacker</option>
+                                <option value="Toxic">Toxic</option>
+                                <option value="Neon">Neon</option>
+                            </optgroup>
+                            <optgroup label="Red / Pink Styles">
+                                <option value="Cherry">Cherry</option>
+                                <option value="Love">Love</option>
+                                <option value="Sakura">Sakura</option>
+                                <option value="Peach">Peach</option>
+                                <option value="Christmas">Christmas</option>
+                                <option value="Hell">Hell</option>
+                                <option value="Fire">Fire</option>
+                                <option value="Magma">Magma</option>
+                            </optgroup>
+                            <optgroup label="Blue / Ice Styles">
+                                <option value="Moon">Moon</option>
+                                <option value="Ice">Ice</option>
+                                <option value="Rain">Rain</option>
+                                <option value="Ocean">Ocean</option>
+                                <option value="Storm">Storm</option>
+                                <option value="Cyberpunk">Cyberpunk</option>
+                            </optgroup>
+                            <optgroup label="Other Colors">
+                                <option value="White">White</option>
+                                <option value="Sunset">Sunset</option>
+                                <option value="Bubblegum">Bubblegum</option>
+                                <option value="Violet">Violet</option>
+                                <option value="Galaxy">Galaxy</option>
+                                <option value="Gold">Gold</option>
+                            </optgroup>
+                        </select>
+
+                        <div class="inp-label">APP TITLE</div> <input type="text" class="inp-field" id="cfgTitle">
                         <div class="inp-label">SUBTITLE</div> <input type="text" class="inp-field" id="cfgSub">
-                        <div class="inp-label">BG IMAGE URL</div> <input type="text" class="inp-field" id="cfgBg">
-                        <div class="inp-label">PROFILE IMAGE URL</div> <input type="text" class="inp-field" id="cfgProf">
+                        <div class="inp-label">BG URL</div> <input type="text" class="inp-field" id="cfgBg">
                     </div>
 
                     <div class="cfg-section">
-                        <div class="cfg-head"><i class="fas fa-rocket"></i> Updates</div>
+                        <div class="cfg-head"><i class="fas fa-rocket"></i> Updates & Version</div>
                         <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px;">
                             <div><div class="inp-label">VERSION</div><input type="text" class="inp-field" id="cfgVer"></div>
-                            <div><div class="inp-label">URL</div><input type="text" class="inp-field" id="urlUpdate"></div>
+                            <div><div class="inp-label">UPDATE URL</div><input type="text" class="inp-field" id="urlUpdate"></div>
                         </div>
-                        <div class="inp-label">HELP URL</div><input type="text" class="inp-field" id="urlHelp">
                     </div>
 
                     <div class="cfg-section">
@@ -228,7 +225,7 @@
 
                     <div class="cfg-section">
                         <div class="cfg-head">
-                            <i class="fas fa-tools"></i> Maintenance Mode
+                            <i class="fas fa-tools"></i> Maintenance
                             <label class="switch"><input type="checkbox" id="maintShow"><span class="slider"></span></label>
                         </div>
                         <div class="inp-label">MESSAGE</div> <input type="text" class="inp-field" id="maintMsg">
@@ -243,26 +240,21 @@
         </div>
 
         <div class="nav-dock">
-            <div class="nav-item active" id="navKey" onclick="switchTab('keys')"><i class="fas fa-key"></i><span class="nav-lbl">KEYS</span></div>
-            <div class="nav-item" id="navDev" onclick="switchTab('devices')"><i class="fas fa-mobile-alt"></i><span class="nav-lbl">DEVICES</span></div>
-            <div class="nav-item" id="navConf" onclick="switchTab('conf')"><i class="fas fa-sliders-h"></i><span class="nav-lbl">CONFIG</span></div>
-        </div>
-    </div>
-
-    <div id="themeModal" class="modal-wrap">
-        <div class="modal-card">
-            <h3 style="margin-top:0; color:var(--text); display:flex; justify-content:space-between;">
-                <span>Select Theme</span>
-                <i class="fas fa-times" onclick="closeModals()" style="cursor:pointer; color:var(--muted)"></i>
-            </h3>
-            <div id="themeListContent">
-                </div>
+            <div class="nav-item active" id="navKey" onclick="switchTab('keys')">
+                <i class="fas fa-key"></i><span class="nav-lbl">KEYS</span>
+            </div>
+            <div class="nav-item" id="navDev" onclick="switchTab('devices')">
+                <i class="fas fa-mobile-alt"></i><span class="nav-lbl">DEVICES</span>
+            </div>
+            <div class="nav-item" id="navConf" onclick="switchTab('conf')">
+                <i class="fas fa-sliders-h"></i><span class="nav-lbl">CONFIG</span>
+            </div>
         </div>
     </div>
 
     <div id="genModal" class="modal-wrap">
         <div class="modal-card">
-            <h3 style="margin-top:0; color:var(--text);">New Key</h3>
+            <h3 style="margin-top:0; color:#fff;">New Key</h3>
             
             <div class="inp-label">NAME / PREFIX</div>
             <input type="text" class="inp-field" id="genName" value="Key_VIP">
@@ -276,10 +268,10 @@
             <input type="hidden" id="genType" value="Duration">
 
             <div id="boxDur">
-                <div class="inp-label">VALUE (e.g. 1h, 7d)</div>
+                <div class="inp-label">DURATION (e.g. 1h, 7d)</div>
                 <input type="text" class="inp-field" id="genValDur" placeholder="1d">
-                <div class="inp-label">SHOW AGAIN (Optional, e.g. 1h)</div>
-                <input type="text" class="inp-field" id="genShowAgain" placeholder="1h">
+                <div class="inp-label">SHOW AGAIN (Optional)</div>
+                <input type="text" class="inp-field" id="genShowAgain" placeholder="e.g. 1h">
             </div>
 
             <div id="boxFix" class="hidden">
@@ -291,25 +283,30 @@
             <input type="number" class="inp-field" id="genMax" value="1">
 
             <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:20px;" onclick="createKey()">GENERATE</button>
+            <button class="btn-text" style="width:100%; color:var(--muted); background:transparent; border:none; margin-top:10px;" onclick="closeModals()">CANCEL</button>
         </div>
     </div>
 
     <div id="addDevModal" class="modal-wrap">
         <div class="modal-card">
-            <h3 style="margin-top:0;">Link Device</h3>
-            <div class="inp-label">DEVICE ID</div>
+            <h3 style="margin-top:0; color:#fff;">Link Device</h3>
+            <div class="inp-label">DEVICE ID (HWID)</div>
             <input type="text" class="inp-field" id="newDevId" placeholder="e.g. 3ba4...">
-            <div class="inp-label">KEY</div>
-            <select class="inp-field" id="newDevKey"></select>
-            <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:20px;" onclick="saveNewDevice()">LINK</button>
+            
+            <div class="inp-label">ASSIGN TO KEY</div>
+            <select class="inp-field" id="newDevKey">
+                </select>
+
+            <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:20px;" onclick="saveNewDevice()">LINK DEVICE</button>
+            <button class="btn-text" style="width:100%; color:var(--muted); background:transparent; border:none; margin-top:10px;" onclick="closeModals()">CANCEL</button>
         </div>
     </div>
 
     <div id="detailModal" class="modal-wrap">
         <div class="modal-card">
-            <h3 style="margin-top:0; display:flex; justify-content:space-between;">
+            <h3 style="margin-top:0; color:#fff; display:flex; justify-content:space-between; align-items:center;">
                 <span>Overview</span>
-                <i class="fas fa-times" onclick="closeModals()" style="cursor:pointer; color:var(--muted)"></i>
+                <i class="fas fa-times" onclick="closeModals()" style="font-size:1.2rem; color:var(--muted); cursor:pointer;"></i>
             </h3>
             <div id="detailContent"></div>
         </div>
@@ -318,33 +315,27 @@
     <div id="toast" class="toast"><i class="fas fa-check-circle" style="color:var(--green)"></i><span>Success</span></div>
 
     <script>
-        // --- 1. CONFIG & DATA ---
+        // --- 1. CONFIG ---
         let dbUrl = localStorage.getItem("dpAdminUrl");
         let dbData = null;
         
         const DEFAULT_JSON = {
             "Config": {
-                "Announcement": { "Message": "Welcome", "Show": false, "Title": "Info" },
+                "Announcement": {"Message": "Welcome", "Show": false, "Title": "Info"},
                 "AppVersion": "1.0", "HelpUrl": "", "Maintenance": false, "MaintenanceMessage": "Updating...",
                 "Status": "Safe", "Theme": "Cyberpunk",
-                "UI": { "BackgroundUrl": "", "BtnAdmin": "Help", "ProfileUrl": "", "Subtitle": "Admin", "Title": "DPMods" },
+                "UI": {"BackgroundUrl": "", "BtnAdmin": "Help", "ProfileUrl": "", "Subtitle": "Dev", "Title": "DPMods"},
                 "UpdateUrl": ""
             },
             "Keys": {}
         };
 
-        const THEMES = {
-            "Green / Hacker": ["Matrix", "Hacker", "Toxic", "Neon"],
-            "Red / Pink": ["Cherry", "Love", "Sakura", "Peach", "Christmas", "Hell", "Fire", "Magma"],
-            "Blue / Ice": ["Moon", "Ice", "Rain", "Ocean", "Storm", "Cyberpunk"],
-            "Other": ["White", "Sunset", "Bubblegum", "Violet", "Galaxy", "Gold"]
-        };
-
         const cvs = document.getElementById('bgCanvas');
         const ctx = cvs.getContext('2d');
         let parts = [];
-        let accent = "#00e5ff";
+        let accent = "rgba(0, 229, 255, 0.3)";
 
+        // --- 2. CORE ---
         function cleanUrl(u) {
             let s = u.trim();
             if(s.includes("firebaseio.com")) s = s.split("firebaseio.com")[0] + "firebaseio.com";
@@ -358,31 +349,27 @@
             location.reload();
         }
 
-        // --- 2. INIT ---
         if(!dbUrl) { document.getElementById('setupView').style.display = 'flex'; } 
         else { appInit(); }
 
         async function appInit(manual=false) {
             document.getElementById('appView').classList.remove('hidden');
             document.getElementById('loader').classList.remove('hidden');
-            ['tabKeys','tabConfig','tabDevices'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+            document.getElementById('tabKeys').classList.add('hidden');
+            document.getElementById('tabConfig').classList.add('hidden');
+            document.getElementById('tabDevices').classList.add('hidden');
 
             try {
                 const res = await fetch(cleanUrl(dbUrl));
                 if(!res.ok) throw new Error("HTTP Error");
                 let data = await res.json();
-                
                 if(!data) {
                     await fetch(cleanUrl(dbUrl), { method:'PUT', body:JSON.stringify(DEFAULT_JSON) });
                     data = DEFAULT_JSON;
                 }
-                
                 dbData = data;
                 ensureStruct();
                 
-                // Apply saved theme
-                if(dbData.Config.Theme) applyThemeUI(dbData.Config.Theme);
-
                 document.getElementById('loader').classList.add('hidden');
                 switchTab('keys');
                 renderKeys();
@@ -403,69 +390,12 @@
             catch(e) { showToast("Error Saving"); }
         }
 
-        // --- 3. THEME SYSTEM ---
-        function openThemeModal() {
-            const list = document.getElementById('themeListContent');
-            list.innerHTML = "";
-            const current = dbData.Config.Theme || "Cyberpunk";
-
-            for (const [cat, themes] of Object.entries(THEMES)) {
-                list.innerHTML += `<div class="theme-cat">${cat}</div>`;
-                let grid = document.createElement('div');
-                grid.className = 'theme-grid';
-                themes.forEach(t => {
-                    const active = (t === current) ? 'active' : '';
-                    grid.innerHTML += `
-                        <div class="theme-btn ${active}" onclick="setTheme('${t}')">
-                            ${t} ${active ? '<i class="fas fa-check"></i>':''}
-                        </div>`;
-                });
-                list.appendChild(grid);
-            }
-            document.getElementById('themeModal').classList.add('open');
-        }
-
-        function setTheme(t) {
-            applyThemeUI(t);
-            dbData.Config.Theme = t;
-            sync();
-            closeModals();
-        }
-
-        function applyThemeUI(t) {
-            document.documentElement.setAttribute('data-theme', t);
-            // Re-fetch accent for canvas
-            setTimeout(() => {
-                accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-            }, 100);
-        }
-
-        // --- 4. TABS ---
-        function switchTab(t) {
-            ['tabKeys','tabDevices','tabConfig'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            ['navKey','navDev','navConf'].forEach(id => document.getElementById(id).classList.remove('active'));
-
-            if(t === 'keys') {
-                document.getElementById('tabKeys').classList.remove('hidden');
-                document.getElementById('navKey').classList.add('active');
-                renderKeys();
-            } else if (t === 'devices') {
-                document.getElementById('tabDevices').classList.remove('hidden');
-                document.getElementById('navDev').classList.add('active');
-                renderDevices();
-            } else {
-                document.getElementById('tabConfig').classList.remove('hidden');
-                document.getElementById('navConf').classList.add('active');
-                fillConfig();
-            }
-        }
-
-        // --- 5. RENDER FUNCTIONS ---
+        // --- 3. TABS: KEYS ---
         function renderKeys() {
             const list = document.getElementById('keysList');
             list.innerHTML = "";
             const search = document.getElementById('searchKey').value.toLowerCase();
-            const keys = Object.keys(dbData.Keys).sort().reverse(); // Show keys alphabetically or reverse
+            const keys = Object.keys(dbData.Keys).reverse();
 
             keys.forEach(kName => {
                 if(search && !kName.toLowerCase().includes(search)) return;
@@ -501,29 +431,38 @@
         function viewKeyDetails(kName) {
             const k = dbData.Keys[kName];
             
+            // Devices HTML
             let devHtml = `<div style="color:var(--muted); font-size:0.8rem; font-style:italic;">No Devices</div>`;
             if(k.Devices && k.Devices !== "null" && typeof k.Devices === 'object') {
                 devHtml = "";
                 Object.keys(k.Devices).forEach(devId => {
-                    devHtml += `<div class="device-item active"><span>${devId}</span><i class="fas fa-link" style="color:var(--green)"></i></div>`;
+                    devHtml += `
+                    <div class="device-item active">
+                        <span>${devId}</span>
+                        <i class="fas fa-link" style="color:var(--green)"></i>
+                    </div>`;
                 });
             }
 
+            // ShowAgain check
+            let showAgainHtml = k.ShowAgain ? `<div class="detail-group"><div class="detail-lbl">SHOW AGAIN</div><div class="detail-val">${k.ShowAgain}</div></div>` : '';
+
             document.getElementById('detailContent').innerHTML = `
                 <div class="detail-group">
-                    <div class="detail-lbl">KEY NAME</div>
+                    <div class="detail-lbl">KEY</div>
                     <div class="detail-val" style="color:var(--accent);">${kName}</div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div class="detail-group"><div class="detail-lbl">TYPE</div><div class="detail-val">${k.Type}</div></div>
                     <div class="detail-group"><div class="detail-lbl">VALUE</div><div class="detail-val">${k.Value}</div></div>
                 </div>
-                ${k.ShowAgain ? `<div class="detail-group"><div class="detail-lbl">SHOW AGAIN</div><div class="detail-val">${k.ShowAgain}</div></div>` : ''}
+                ${showAgainHtml}
                 <div class="detail-group">
                     <div class="detail-lbl">ACTIVATED AT</div>
                     <div class="detail-val" style="color:${k.ActivatedAt>0 ? 'var(--green)':'var(--muted)'}">
-                        ${k.ActivatedAt > 0 ? new Date(k.ActivatedAt).toLocaleString() : 'Not Activated'}
+                        ${k.ActivatedAt > 0 ? new Date(k.ActivatedAt).toLocaleString() : 'Never'}
                     </div>
+                    <div class="detail-lbl" style="margin-top:5px; opacity:0.5;">TIMESTAMP: ${k.ActivatedAt}</div>
                 </div>
                 <div class="detail-group">
                     <div class="detail-lbl">LINKED DEVICES (${k.MaxDevices} Max)</div>
@@ -533,6 +472,7 @@
             document.getElementById('detailModal').classList.add('open');
         }
 
+        // --- 4. TABS: DEVICES ---
         function renderDevices() {
             const div = document.getElementById('deviceGlobalList');
             div.innerHTML = "";
@@ -546,7 +486,7 @@
                         div.innerHTML += `
                         <div class="glass-card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
                             <div style="overflow:hidden;">
-                                <div style="font-family:'JetBrains Mono'; font-size:0.85rem; color:var(--text); margin-bottom:4px;">${devId}</div>
+                                <div style="font-family:'JetBrains Mono'; font-size:0.85rem; color:#fff; margin-bottom:4px;">${devId}</div>
                                 <div style="font-size:0.7rem; color:var(--muted);"><i class="fas fa-key" style="color:var(--accent)"></i> ${kName}</div>
                             </div>
                             <div class="btn-mini btn-del" onclick="unlinkDevice('${kName}', '${devId}')"><i class="fas fa-unlink"></i></div>
@@ -555,10 +495,126 @@
                 }
             });
 
-            if(!found) div.innerHTML = `<div style="text-align:center; color:var(--muted); margin-top:50px;">No active devices.</div>`;
+            if(!found) div.innerHTML = `<div style="text-align:center; color:var(--muted); margin-top:50px;">No active devices found.</div>`;
         }
 
-        // --- 6. ACTIONS ---
+        function unlinkDevice(kName, devId) {
+            if(confirm("Unlink this device?")) {
+                delete dbData.Keys[kName].Devices[devId];
+                if(Object.keys(dbData.Keys[kName].Devices).length === 0) {
+                    dbData.Keys[kName].Devices = "null"; 
+                }
+                renderDevices();
+                sync();
+            }
+        }
+
+        function openAddDeviceModal() {
+            const sel = document.getElementById('newDevKey');
+            sel.innerHTML = "";
+            Object.keys(dbData.Keys).forEach(k => {
+                sel.innerHTML += `<option value="${k}">${k}</option>`;
+            });
+            document.getElementById('addDevModal').classList.add('open');
+        }
+
+        function saveNewDevice() {
+            const did = document.getElementById('newDevId').value.trim();
+            const key = document.getElementById('newDevKey').value;
+            
+            if(!did) return alert("Device ID Required");
+            if(!key) return alert("Key Required");
+
+            if(!dbData.Keys[key].Devices || dbData.Keys[key].Devices === "null") {
+                dbData.Keys[key].Devices = {};
+            }
+            dbData.Keys[key].Devices[did] = true;
+            
+            closeModals();
+            renderDevices();
+            sync();
+        }
+
+        // --- 5. CONFIG ---
+        function fillConfig() {
+            const c = dbData.Config;
+            
+            // UI & Status
+            document.getElementById('cfgStatus').value = c.Status || "Safe";
+            document.getElementById('cfgClientTheme').value = c.Theme || "Cyberpunk"; // Load Client Theme
+            document.getElementById('cfgTitle').value = c.UI?.Title || "";
+            document.getElementById('cfgSub').value = c.UI?.Subtitle || "";
+            document.getElementById('cfgBg').value = c.UI?.BackgroundUrl || "";
+            
+            // Updates
+            document.getElementById('cfgVer').value = c.AppVersion || "1.0";
+            document.getElementById('urlUpdate').value = c.UpdateUrl || "";
+            
+            // Toggles & Messages
+            document.getElementById('annShow').checked = c.Announcement?.Show || false;
+            document.getElementById('annTitle').value = c.Announcement?.Title || "";
+            document.getElementById('annMsg').value = c.Announcement?.Message || "";
+            document.getElementById('maintShow').checked = c.Maintenance || false;
+            document.getElementById('maintMsg').value = c.MaintenanceMessage || "";
+        }
+
+        function saveConfig() {
+            const c = dbData.Config;
+            
+            // UI & Status
+            c.Status = document.getElementById('cfgStatus').value;
+            c.Theme = document.getElementById('cfgClientTheme').value; // Save Client Theme
+            c.UI.Title = document.getElementById('cfgTitle').value;
+            c.UI.Subtitle = document.getElementById('cfgSub').value;
+            c.UI.BackgroundUrl = document.getElementById('cfgBg').value;
+            
+            // Updates
+            c.AppVersion = document.getElementById('cfgVer').value;
+            c.UpdateUrl = document.getElementById('urlUpdate').value;
+            
+            // Toggles
+            c.Announcement.Show = document.getElementById('annShow').checked;
+            c.Announcement.Title = document.getElementById('annTitle').value;
+            c.Announcement.Message = document.getElementById('annMsg').value;
+            c.Maintenance = document.getElementById('maintShow').checked;
+            c.MaintenanceMessage = document.getElementById('maintMsg').value;
+            
+            sync();
+        }
+
+        // --- 6. UTILS & HELPERS ---
+        function switchTab(t) {
+            ['tabKeys','tabDevices','tabConfig'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            ['navKey','navDev','navConf'].forEach(id => document.getElementById(id).classList.remove('active'));
+
+            if(t === 'keys') {
+                document.getElementById('tabKeys').classList.remove('hidden');
+                document.getElementById('navKey').classList.add('active');
+                renderKeys();
+            } else if (t === 'devices') {
+                document.getElementById('tabDevices').classList.remove('hidden');
+                document.getElementById('navDev').classList.add('active');
+                renderDevices();
+            } else {
+                document.getElementById('tabConfig').classList.remove('hidden');
+                document.getElementById('navConf').classList.add('active');
+                fillConfig();
+            }
+        }
+
+        function selectType(t) {
+            document.getElementById('genType').value = t;
+            document.querySelectorAll('.type-opt').forEach(el => el.classList.remove('selected'));
+            if(t==='Duration') document.getElementById('typeDur').classList.add('selected');
+            if(t==='Fixed') document.getElementById('typeFix').classList.add('selected');
+            if(t==='Lifetime') document.getElementById('typeLife').classList.add('selected');
+            
+            document.getElementById('boxDur').classList.add('hidden');
+            document.getElementById('boxFix').classList.add('hidden');
+            if(t === 'Duration') document.getElementById('boxDur').classList.remove('hidden');
+            if(t === 'Fixed') document.getElementById('boxFix').classList.remove('hidden');
+        }
+
         function createKey() {
             const name = document.getElementById('genName').value.trim();
             const type = document.getElementById('genType').value;
@@ -583,92 +639,26 @@
             if(showAgain) newKey.ShowAgain = showAgain;
 
             dbData.Keys[name] = newKey;
+
             closeModals();
             renderKeys();
             sync();
         }
 
-        function unlinkDevice(kName, devId) {
-            if(confirm("Unlink Device?")) {
-                delete dbData.Keys[kName].Devices[devId];
-                if(Object.keys(dbData.Keys[kName].Devices).length === 0) dbData.Keys[kName].Devices = "null";
-                renderDevices(); sync();
-            }
-        }
-
-        function saveNewDevice() {
-            const did = document.getElementById('newDevId').value.trim();
-            const key = document.getElementById('newDevKey').value;
-            if(!did || !key) return alert("All fields required");
-            if(!dbData.Keys[key].Devices || dbData.Keys[key].Devices === "null") dbData.Keys[key].Devices = {};
-            dbData.Keys[key].Devices[did] = true;
-            closeModals(); renderDevices(); sync();
-        }
-
         function delKey(k) { if(confirm("Delete Key?")) { delete dbData.Keys[k]; renderKeys(); sync(); } }
-
-        function fillConfig() {
-            const c = dbData.Config;
-            document.getElementById('cfgStatus').value = c.Status || "Safe";
-            document.getElementById('cfgTitle').value = c.UI?.Title || "";
-            document.getElementById('cfgSub').value = c.UI?.Subtitle || "";
-            document.getElementById('cfgBg').value = c.UI?.BackgroundUrl || "";
-            document.getElementById('cfgProf').value = c.UI?.ProfileUrl || "";
-            document.getElementById('cfgVer').value = c.AppVersion || "1.0";
-            document.getElementById('urlUpdate').value = c.UpdateUrl || "";
-            document.getElementById('urlHelp').value = c.HelpUrl || "";
-            document.getElementById('annShow').checked = c.Announcement?.Show || false;
-            document.getElementById('annTitle').value = c.Announcement?.Title || "";
-            document.getElementById('annMsg').value = c.Announcement?.Message || "";
-            document.getElementById('maintShow').checked = c.Maintenance || false;
-            document.getElementById('maintMsg').value = c.MaintenanceMessage || "";
-        }
-
-        function saveConfig() {
-            const c = dbData.Config;
-            c.Status = document.getElementById('cfgStatus').value;
-            c.UI.Title = document.getElementById('cfgTitle').value;
-            c.UI.Subtitle = document.getElementById('cfgSub').value;
-            c.UI.BackgroundUrl = document.getElementById('cfgBg').value;
-            c.UI.ProfileUrl = document.getElementById('cfgProf').value;
-            c.AppVersion = document.getElementById('cfgVer').value;
-            c.UpdateUrl = document.getElementById('urlUpdate').value;
-            c.HelpUrl = document.getElementById('urlHelp').value;
-            c.Announcement.Show = document.getElementById('annShow').checked;
-            c.Announcement.Title = document.getElementById('annTitle').value;
-            c.Announcement.Message = document.getElementById('annMsg').value;
-            c.Maintenance = document.getElementById('maintShow').checked;
-            c.MaintenanceMessage = document.getElementById('maintMsg').value;
-            sync();
-        }
-
-        // --- 7. UTILS ---
-        function selectType(t) {
-            document.getElementById('genType').value = t;
-            document.querySelectorAll('.type-opt').forEach(el => el.classList.remove('selected'));
-            if(t==='Duration') document.getElementById('typeDur').classList.add('selected');
-            if(t==='Fixed') document.getElementById('typeFix').classList.add('selected');
-            if(t==='Lifetime') document.getElementById('typeLife').classList.add('selected');
-            
-            document.getElementById('boxDur').classList.add('hidden');
-            document.getElementById('boxFix').classList.add('hidden');
-            if(t === 'Duration') document.getElementById('boxDur').classList.remove('hidden');
-            if(t === 'Fixed') document.getElementById('boxFix').classList.remove('hidden');
-        }
-
-        function openAddDeviceModal() {
-            const sel = document.getElementById('newDevKey');
-            sel.innerHTML = "";
-            Object.keys(dbData.Keys).forEach(k => sel.innerHTML += `<option value="${k}">${k}</option>`);
-            document.getElementById('addDevModal').classList.add('open');
-        }
-
         function openGenModal() { document.getElementById('genModal').classList.add('open'); }
         function closeModals() { document.querySelectorAll('.modal-wrap').forEach(m=>m.classList.remove('open')); }
         function hardReset() { localStorage.removeItem("dpAdminUrl"); location.reload(); }
         function showToast(m) { const t=document.getElementById('toast'); t.querySelector('span').innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
 
-        // Animation
+        let themes = ['cyberpunk', 'blood', 'matrix', 'naruto'];
+        let curTheme = 0;
+        function toggleTheme() {
+            curTheme = (curTheme+1)%themes.length;
+            document.documentElement.setAttribute('data-theme', themes[curTheme]);
+            accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        }
+
         function initParts() {
             cvs.width=window.innerWidth; cvs.height=window.innerHeight;
             for(let i=0; i<50; i++) parts.push({ x:Math.random()*cvs.width, y:Math.random()*cvs.height, v:(Math.random()*0.5)+0.2, s:Math.random()*2 });
@@ -680,6 +670,7 @@
             requestAnimationFrame(anim);
         }
         window.addEventListener('resize', ()=>{ cvs.width=window.innerWidth; cvs.height=window.innerHeight; });
+        document.documentElement.setAttribute('data-theme', 'cyberpunk');
         initParts();
     </script>
 </body>
