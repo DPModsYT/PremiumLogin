@@ -51,11 +51,13 @@
 
         .btn-gradient { background: linear-gradient(135deg, var(--accent), var(--green)); color: #000; border: none; padding: 0 20px; height: 48px; border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 5px 15px -5px var(--accent); }
         
-        /* --- CARDS (FIXED LAYOUT) --- */
+        /* --- CARDS --- */
         .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 12px; position: relative; backdrop-filter: blur(10px); transition: 0.2s; display: flex; flex-direction: column; gap: 10px; }
         
         .key-row-top { display: flex; justify-content: space-between; align-items: center; }
-        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; font-size: 1rem; word-break: break-all; }
+        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; font-size: 1rem; word-break: break-all; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .key-title:active { color: var(--accent); }
+        .key-title i { opacity: 0.5; font-size: 0.8rem; }
         
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
         .badge.dur { background: rgba(0, 229, 255, 0.15); color: var(--accent); }
@@ -66,7 +68,7 @@
         .detail-item { display: flex; align-items: center; gap: 6px; }
         .detail-item i { color: var(--accent); }
 
-        /* FIXED ACTIONS ROW (No Overlap) */
+        /* ACTIONS */
         .key-actions-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
         .btn-mini { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
         .btn-view { background: rgba(255,255,255,0.05); color: var(--muted); border-color: var(--border); }
@@ -227,11 +229,12 @@
                     </div>
 
                     <div class="cfg-section">
-                        <div class="cfg-head"><i class="fas fa-rocket"></i> Updates & Version</div>
+                        <div class="cfg-head"><i class="fas fa-rocket"></i> Updates & Links</div>
                         <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px;">
                             <div><div class="inp-label">VERSION</div><input type="text" class="inp-field" id="cfgVer"></div>
                             <div><div class="inp-label">UPDATE URL</div><input type="text" class="inp-field" id="urlUpdate"></div>
                         </div>
+                        <div class="inp-label">HELP URL</div><input type="text" class="inp-field" id="urlHelp">
                     </div>
 
                     <div class="cfg-section">
@@ -252,6 +255,7 @@
                     </div>
 
                     <button class="btn-gradient" style="width:100%; justify-content:center;" onclick="saveConfig()">SAVE CHANGES</button>
+                    <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:10px; background:linear-gradient(135deg, #FF9800, #F44336); color:white;" onclick="downloadChildPanel()"><i class="fas fa-child"></i> DOWNLOAD CHILD PANEL</button>
                     <button class="btn-text" style="width:100%; margin-top:15px; color:var(--muted); background:none; border:none;" onclick="hardReset()">DISCONNECT</button>
                 </div>
             </div>
@@ -401,6 +405,10 @@
 
         async function sync() { try { await fetch(cleanUrl(dbUrl), { method:'PUT', body:JSON.stringify(dbData) }); showToast("Saved"); } catch(e) { showToast("Error"); } }
 
+        function copyText(t) {
+            navigator.clipboard.writeText(t).then(() => showToast("Copied!")).catch(() => showToast("Failed"));
+        }
+
         function renderKeys() {
             const list = document.getElementById('keysList');
             if(!dbData.Keys) dbData.Keys = {};
@@ -415,7 +423,9 @@
                 list.innerHTML += `
                 <div class="glass-card">
                     <div class="key-row-top">
-                        <span class="key-title">${kName}</span>
+                        <span class="key-title" onclick="copyText('${kName}')">
+                            <i class="fas fa-copy"></i> ${kName}
+                        </span>
                         <span class="badge ${badge}">${k.Type}</span>
                     </div>
                     <div class="key-details">
@@ -572,6 +582,7 @@
             document.getElementById('cfgProf').value = c.UI?.ProfileUrl || "";
             document.getElementById('cfgVer').value = c.AppVersion || "1.0";
             document.getElementById('urlUpdate').value = c.UpdateUrl || "";
+            document.getElementById('urlHelp').value = c.HelpUrl || "";
             document.getElementById('annShow').checked = c.Announcement?.Show || false;
             document.getElementById('annTitle').value = c.Announcement?.Title || "";
             document.getElementById('annMsg').value = c.Announcement?.Message || "";
@@ -589,6 +600,7 @@
             c.UI.ProfileUrl = document.getElementById('cfgProf').value;
             c.AppVersion = document.getElementById('cfgVer').value;
             c.UpdateUrl = document.getElementById('urlUpdate').value;
+            c.HelpUrl = document.getElementById('urlHelp').value;
             c.Announcement.Show = document.getElementById('annShow').checked;
             c.Announcement.Title = document.getElementById('annTitle').value;
             c.Announcement.Message = document.getElementById('annMsg').value;
@@ -628,6 +640,171 @@
         window.addEventListener('resize', ()=>{cvs.width=window.innerWidth;cvs.height=window.innerHeight;});
         document.documentElement.setAttribute('data-theme', 'Cyberpunk');
         initParts();
+
+        // --- CHILD PANEL GENERATOR (6-PART ENCRYPTION) ---
+        function downloadChildPanel() {
+            if(!dbUrl) return alert("Connect DB first!");
+            
+            // 1. Obfuscate DB URL (Split into 6 parts, Reverse, Base64)
+            const chunkLen = Math.ceil(dbUrl.length / 6);
+            const p = [];
+            for (let i = 0; i < 6; i++) {
+                let part = dbUrl.substr(i * chunkLen, chunkLen);
+                if (i % 2 === 0) part = part.split("").reverse().join(""); // Reverse even parts
+                p.push(btoa(part)); // Base64 encode
+            }
+
+            // 2. Generate HTML
+            const childHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Moderator Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ${document.querySelector('style').innerHTML}
+        .nav-item#navDev, .nav-item#navConf { display: none !important; }
+        .nav-dock { justify-content: center; } 
+        .btn-edit, .btn-del, .btn-mini.btn-edit, .btn-mini.btn-del { display: none !important; }
+        #tabConfig { pointer-events: none; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    <div id="appView">
+        <header>
+            <div class="brand"><i class="fas fa-shield-alt"></i> MOD PANEL</div>
+            <div style="display:flex; gap:10px;">
+                <div class="icon-btn" onclick="toggleTheme()"><i class="fas fa-palette"></i></div>
+            </div>
+        </header>
+        <div class="container">
+            <div id="loader" style="text-align: center; padding: 100px 0;"><i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--accent);"></i></div>
+            
+            <div id="tabKeys" class="hidden">
+                <div class="controls">
+                    <div class="search-box"><i class="fas fa-search"></i><input type="text" class="input-glass" id="searchKey" placeholder="Search..." onkeyup="renderKeys()"></div>
+                    <button class="btn-gradient" onclick="openGenModal()"><i class="fas fa-plus"></i></button>
+                </div>
+                <div id="keysList"></div>
+            </div>
+
+            <div id="tabConfig" class="hidden">
+                <div class="glass-card">
+                    <h3 style="color:var(--accent); text-align:center;">ADMIN PANEL INFO</h3>
+                    <div class="inp-label">APP TITLE</div><div class="inp-field" id="lblTitle">Loading...</div>
+                    <div class="inp-label">STATUS</div><div class="inp-field" id="lblStatus">Loading...</div>
+                    <div class="inp-label" style="margin-top:20px; color:var(--red);">DATABASE URL: HIDDEN (PROTECTED)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-dock">
+            <div class="nav-item active" id="navKey" onclick="switchTab('keys')"><i class="fas fa-key"></i><span class="nav-lbl">KEYS</span></div>
+            <div class="nav-item" onclick="switchTab('conf')"><i class="fas fa-info-circle"></i><span class="nav-lbl">INFO</span></div>
+        </div>
+    </div>
+
+    <div id="genModal" class="modal-wrap">
+        <div class="modal-card">
+            <h3 style="margin-top:0; color:#fff;">New Key</h3>
+            <div class="inp-label">NAME</div><input type="text" class="inp-field" id="genName" value="Key_User">
+            <div class="inp-label">TYPE</div>
+            <div class="type-grid">
+                <div class="type-opt selected" onclick="selectType('Duration')" id="typeDur">Duration</div>
+                <div class="type-opt" onclick="selectType('Fixed')" id="typeFix">Fixed</div>
+                <div class="type-opt" onclick="selectType('Lifetime')" id="typeLife">Lifetime</div>
+            </div>
+            <input type="hidden" id="genType" value="Duration">
+            <div id="boxDur"><div class="inp-label">DURATION</div><input type="text" class="inp-field" id="genValDur" placeholder="1d"></div>
+            <div id="boxFix" class="hidden"><div class="inp-label">EXPIRY</div><input type="date" class="inp-field" id="genValFix"></div>
+            <div class="inp-label">MAX DEVICES</div><input type="number" class="inp-field" id="genMax" value="1">
+            <button class="btn-gradient" style="width:100%; margin-top:20px;" onclick="createKey()">GENERATE</button>
+            <button class="btn-text" style="width:100%; color:var(--muted);" onclick="closeModals()">CANCEL</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><i class="fas fa-check-circle" style="color:var(--green)"></i><span>Success</span></div>
+
+    <script>
+        // REASSEMBLE URL (6-Part Logic)
+        const p = ${JSON.stringify(p)};
+        const dbUrl = (atob(p[0]).split("").reverse().join("")) + atob(p[1]) + (atob(p[2]).split("").reverse().join("")) + atob(p[3]) + (atob(p[4]).split("").reverse().join("")) + atob(p[5]);
+        
+        let dbData = null;
+        const cvs = document.getElementById('bgCanvas'); const ctx = cvs.getContext('2d');
+        let parts = []; let accent = "rgba(0, 229, 255, 0.3)";
+
+        async function appInit() {
+            try {
+                const res = await fetch(dbUrl); let data = await res.json();
+                dbData = data || {Keys:{}, Config:{}};
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('tabKeys').classList.remove('hidden');
+                renderKeys();
+                // Load Info
+                if(dbData.Config && dbData.Config.UI) {
+                    document.getElementById('lblTitle').innerText = dbData.Config.UI.Title || "Unknown";
+                    document.getElementById('lblStatus').innerText = dbData.Config.Status || "Unknown";
+                }
+            } catch(e) { alert("Access Denied"); }
+        }
+
+        function renderKeys() {
+            const list = document.getElementById('keysList'); list.innerHTML = "";
+            const search = document.getElementById('searchKey').value.toLowerCase();
+            Object.keys(dbData.Keys).reverse().forEach(kName => {
+                if(search && !kName.toLowerCase().includes(search)) return;
+                const k = dbData.Keys[kName];
+                let badge = k.Type==='Fixed'?'fix':(k.Type==='Lifetime'?'life':'dur');
+                list.innerHTML += \`<div class="glass-card"><div class="key-row-top"><span class="key-title" onclick="copyText('\${kName}')"><i class="fas fa-copy"></i> \${kName}</span><span class="badge \${badge}">\${k.Type}</span></div><div class="key-details"><div class="detail-item">\${k.Value}</div></div></div>\`; 
+            });
+        }
+
+        function createKey() {
+            const name=document.getElementById('genName').value, type=document.getElementById('genType').value, max=document.getElementById('genMax').value;
+            let val=""; if(type==='Duration')val=document.getElementById('genValDur').value; else if(type==='Fixed'){const d=document.getElementById('genValFix').value; if(d)val=d.split('-').reverse().join('-');} else val=0;
+            if(!name || (!val && type!=='Lifetime')) return alert("Invalid");
+            dbData.Keys[name] = { "ActivatedAt": 0, "Devices": "null", "MaxDevices": parseInt(max)||1, "Type": type, "Value": val };
+            fetch(dbUrl, { method:'PUT', body:JSON.stringify(dbData) }).then(()=>{ closeModals(); renderKeys(); showToast("Generated"); });
+        }
+
+        function copyText(t) { navigator.clipboard.writeText(t).then(()=>showToast("Copied")); }
+        function switchTab(t) { 
+            document.getElementById('tabKeys').classList.add('hidden'); document.getElementById('tabConfig').classList.add('hidden');
+            if(t==='keys') document.getElementById('tabKeys').classList.remove('hidden');
+            else document.getElementById('tabConfig').classList.remove('hidden');
+        }
+        function selectType(t) {
+            document.getElementById('genType').value=t; document.querySelectorAll('.type-opt').forEach(e=>e.classList.remove('selected'));
+            if(t==='Duration')document.getElementById('typeDur').classList.add('selected'); if(t==='Fixed')document.getElementById('typeFix').classList.add('selected'); if(t==='Lifetime')document.getElementById('typeLife').classList.add('selected');
+            document.getElementById('boxDur').classList.add('hidden'); document.getElementById('boxFix').classList.add('hidden');
+            if(t==='Duration')document.getElementById('boxDur').classList.remove('hidden'); if(t==='Fixed')document.getElementById('boxFix').classList.remove('hidden');
+        }
+        function openGenModal() { document.getElementById('genModal').classList.add('open'); }
+        function closeModals() { document.querySelectorAll('.modal-wrap').forEach(m=>m.classList.remove('open')); }
+        function showToast(m) { const t=document.getElementById('toast'); t.querySelector('span').innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
+        let themes = ['cyberpunk', 'blood', 'matrix', 'naruto']; let curTheme = 0;
+        function toggleTheme() { curTheme = (curTheme+1)%themes.length; document.documentElement.setAttribute('data-theme', themes[curTheme]); accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(); }
+        function initParts() { cvs.width=window.innerWidth; cvs.height=window.innerHeight; for(let i=0;i<50;i++)parts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,v:(Math.random()*0.5)+0.2,s:Math.random()*2}); anim(); }
+        function anim() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle=accent; ctx.globalAlpha=0.4; parts.forEach(p=>{p.y-=p.v;if(p.y<0)p.y=cvs.height;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill();}); requestAnimationFrame(anim); }
+        window.addEventListener('resize', ()=>{cvs.width=window.innerWidth;cvs.height=window.innerHeight;});
+        document.documentElement.setAttribute('data-theme', 'cyberpunk');
+        initParts();
+        appInit();
+    <\/script>
+</body>
+</html>`;
+
+            // 3. Download File
+            const blob = new Blob([childHtml], {type: "text/html"});
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "child_index.html";
+            link.click();
+        }
     </script>
 </body>
 </html>
