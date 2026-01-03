@@ -49,15 +49,22 @@
         .input-glass { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 14px 14px 14px 44px; color: var(--text); border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 0.95rem; }
         .input-glass:focus { border-color: var(--accent); }
 
+        /* Buttons */
         .btn-gradient { background: linear-gradient(135deg, var(--accent), var(--green)); color: #000; border: none; padding: 0 20px; height: 48px; border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 5px 15px -5px var(--accent); }
         
+        /* Child Panel Button */
+        .btn-child { background: linear-gradient(135deg, #FF9900, #FF5500); color: #fff; width: 100%; justify-content: center; margin-top: 15px; box-shadow: 0 5px 20px -5px #FF5500; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-child:active { transform: scale(0.98); }
+
         /* --- CARDS --- */
         .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 12px; position: relative; backdrop-filter: blur(10px); transition: 0.2s; display: flex; flex-direction: column; gap: 10px; }
         
         .key-row-top { display: flex; justify-content: space-between; align-items: center; }
-        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; font-size: 1rem; word-break: break-all; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        
+        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; font-size: 1rem; word-break: break-all; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
         .key-title:active { color: var(--accent); }
-        .key-title i { opacity: 0.5; font-size: 0.8rem; }
+        .key-title i { font-size: 0.8rem; opacity: 0.5; transition: 0.2s; }
+        .key-title:hover i { opacity: 1; color: var(--accent); }
         
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
         .badge.dur { background: rgba(0, 229, 255, 0.15); color: var(--accent); }
@@ -68,7 +75,6 @@
         .detail-item { display: flex; align-items: center; gap: 6px; }
         .detail-item i { color: var(--accent); }
 
-        /* ACTIONS */
         .key-actions-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
         .btn-mini { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
         .btn-view { background: rgba(255,255,255,0.05); color: var(--muted); border-color: var(--border); }
@@ -255,7 +261,7 @@
                     </div>
 
                     <button class="btn-gradient" style="width:100%; justify-content:center;" onclick="saveConfig()">SAVE CHANGES</button>
-                    <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:10px; background:linear-gradient(135deg, #FF9800, #F44336); color:white;" onclick="downloadChildPanel()"><i class="fas fa-child"></i> DOWNLOAD CHILD PANEL</button>
+                    <button class="btn-gradient btn-child" onclick="downloadChildPanel()"><i class="fas fa-user-shield"></i> DOWNLOAD CHILD PANEL</button>
                     <button class="btn-text" style="width:100%; margin-top:15px; color:var(--muted); background:none; border:none;" onclick="hardReset()">DISCONNECT</button>
                 </div>
             </div>
@@ -395,7 +401,7 @@
                 renderKeys();
                 if(!manual) showToast("Connected");
             } catch(e) { 
-                // SAFETY NET: Avoid Black Screen if loading fails
+                // SAFETY NET
                 console.error(e);
                 document.getElementById('loader').classList.add('hidden');
                 document.getElementById('tabConfig').classList.remove('hidden');
@@ -641,20 +647,19 @@
         document.documentElement.setAttribute('data-theme', 'Cyberpunk');
         initParts();
 
-        // --- CHILD PANEL GENERATOR (6-PART ENCRYPTION) ---
+        // --- CHILD PANEL GENERATOR (ROBUST ENCRYPTION) ---
         function downloadChildPanel() {
-            if(!dbUrl) return alert("Connect DB first!");
-            
-            // 1. Obfuscate DB URL (Split into 6 parts, Reverse, Base64)
-            const chunkLen = Math.ceil(dbUrl.length / 6);
-            const p = [];
-            for (let i = 0; i < 6; i++) {
-                let part = dbUrl.substr(i * chunkLen, chunkLen);
-                if (i % 2 === 0) part = part.split("").reverse().join(""); // Reverse even parts
-                p.push(btoa(part)); // Base64 encode
-            }
+            const rawUrl = cleanUrl(dbUrl); // Ensure .json is there
+            if(!rawUrl.includes("firebaseio.com")) return alert("Invalid Database URL");
 
-            // 2. Generate HTML
+            // ENCRYPTION: 1. Reverse, 2. Base64, 3. Split
+            const step1 = rawUrl.split("").reverse().join("");
+            const step2 = btoa(step1);
+            const chunkLen = Math.ceil(step2.length / 6);
+            const parts = [];
+            for (let i=0; i<6; i++) parts.push(step2.substr(i*chunkLen, chunkLen));
+
+            // CHILD HTML
             const childHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -668,6 +673,7 @@
         .nav-item#navDev, .nav-item#navConf { display: none !important; }
         .nav-dock { justify-content: center; } 
         .btn-edit, .btn-del, .btn-mini.btn-edit, .btn-mini.btn-del { display: none !important; }
+        .key-actions-row { justify-content: center !important; }
         #tabConfig { pointer-events: none; opacity: 0.7; }
     </style>
 </head>
@@ -696,7 +702,7 @@
                     <h3 style="color:var(--accent); text-align:center;">ADMIN PANEL INFO</h3>
                     <div class="inp-label">APP TITLE</div><div class="inp-field" id="lblTitle">Loading...</div>
                     <div class="inp-label">STATUS</div><div class="inp-field" id="lblStatus">Loading...</div>
-                    <div class="inp-label" style="margin-top:20px; color:var(--red);">DATABASE URL: HIDDEN (PROTECTED)</div>
+                    <div class="inp-label" style="margin-top:20px; color:var(--red);">DATABASE ACCESS: RESTRICTED</div>
                 </div>
             </div>
         </div>
@@ -718,7 +724,10 @@
                 <div class="type-opt" onclick="selectType('Lifetime')" id="typeLife">Lifetime</div>
             </div>
             <input type="hidden" id="genType" value="Duration">
-            <div id="boxDur"><div class="inp-label">DURATION</div><input type="text" class="inp-field" id="genValDur" placeholder="1d"></div>
+            <div id="boxDur">
+                <div class="inp-label">DURATION</div><input type="text" class="inp-field" id="genValDur" placeholder="1d">
+                <div class="inp-label">SHOW AGAIN</div><input type="text" class="inp-field" id="genShowAgain" placeholder="e.g. 1h">
+            </div>
             <div id="boxFix" class="hidden"><div class="inp-label">EXPIRY</div><input type="date" class="inp-field" id="genValFix"></div>
             <div class="inp-label">MAX DEVICES</div><input type="number" class="inp-field" id="genMax" value="1">
             <button class="btn-gradient" style="width:100%; margin-top:20px;" onclick="createKey()">GENERATE</button>
@@ -729,46 +738,58 @@
     <div id="toast" class="toast"><i class="fas fa-check-circle" style="color:var(--green)"></i><span>Success</span></div>
 
     <script>
-        // REASSEMBLE URL (6-Part Logic)
-        const p = ${JSON.stringify(p)};
-        const dbUrl = (atob(p[0]).split("").reverse().join("")) + atob(p[1]) + (atob(p[2]).split("").reverse().join("")) + atob(p[3]) + (atob(p[4]).split("").reverse().join("")) + atob(p[5]);
+        // DECRYPTION LOGIC
+        const p = ${JSON.stringify(parts)};
+        const dbUrl = atob(p.join("")).split("").reverse().join("");
         
         let dbData = null;
         const cvs = document.getElementById('bgCanvas'); const ctx = cvs.getContext('2d');
-        let parts = []; let accent = "rgba(0, 229, 255, 0.3)";
+        let partsArr = []; let accent = "rgba(0, 229, 255, 0.3)";
 
         async function appInit() {
             try {
-                const res = await fetch(dbUrl); let data = await res.json();
+                const res = await fetch(dbUrl); 
+                if(!res.ok) throw new Error("Net Err");
+                let data = await res.json();
                 dbData = data || {Keys:{}, Config:{}};
                 document.getElementById('loader').classList.add('hidden');
                 document.getElementById('tabKeys').classList.remove('hidden');
                 renderKeys();
-                // Load Info
                 if(dbData.Config && dbData.Config.UI) {
                     document.getElementById('lblTitle').innerText = dbData.Config.UI.Title || "Unknown";
                     document.getElementById('lblStatus').innerText = dbData.Config.Status || "Unknown";
                 }
-            } catch(e) { alert("Access Denied"); }
+            } catch(e) { console.log(e); alert("Connection Failed"); }
         }
 
         function renderKeys() {
             const list = document.getElementById('keysList'); list.innerHTML = "";
             const search = document.getElementById('searchKey').value.toLowerCase();
+            if(!dbData.Keys) dbData.Keys={};
             Object.keys(dbData.Keys).reverse().forEach(kName => {
                 if(search && !kName.toLowerCase().includes(search)) return;
                 const k = dbData.Keys[kName];
                 let badge = k.Type==='Fixed'?'fix':(k.Type==='Lifetime'?'life':'dur');
-                list.innerHTML += \`<div class="glass-card"><div class="key-row-top"><span class="key-title" onclick="copyText('\${kName}')"><i class="fas fa-copy"></i> \${kName}</span><span class="badge \${badge}">\${k.Type}</span></div><div class="key-details"><div class="detail-item">\${k.Value}</div></div></div>\`; 
+                list.innerHTML += \`<div class="glass-card"><div class="key-row-top"><span class="key-title" onclick="copyText('\${kName}')"><i class="fas fa-copy"></i> \${kName}</span><span class="badge \${badge}">\${k.Type}</span></div><div class="key-details"><div class="detail-item">\${k.Value}</div></div><div class="key-actions-row"><div class="btn-mini btn-view" onclick="viewKey('\${kName}')"><i class="fas fa-eye"></i></div></div></div>\`; 
             });
         }
 
         function createKey() {
-            const name=document.getElementById('genName').value, type=document.getElementById('genType').value, max=document.getElementById('genMax').value;
+            const name=document.getElementById('genName').value, type=document.getElementById('genType').value, max=document.getElementById('genMax').value, show=document.getElementById('genShowAgain').value;
             let val=""; if(type==='Duration')val=document.getElementById('genValDur').value; else if(type==='Fixed'){const d=document.getElementById('genValFix').value; if(d)val=d.split('-').reverse().join('-');} else val=0;
             if(!name || (!val && type!=='Lifetime')) return alert("Invalid");
-            dbData.Keys[name] = { "ActivatedAt": 0, "Devices": "null", "MaxDevices": parseInt(max)||1, "Type": type, "Value": val };
+            
+            const newKey = { "ActivatedAt": 0, "Devices": "null", "MaxDevices": parseInt(max)||1, "Type": type, "Value": val };
+            if(show) newKey.ShowAgain = show;
+            
+            dbData.Keys[name] = newKey;
             fetch(dbUrl, { method:'PUT', body:JSON.stringify(dbData) }).then(()=>{ closeModals(); renderKeys(); showToast("Generated"); });
+        }
+
+        // VIEW ONLY
+        function viewKey(kName) {
+            const k = dbData.Keys[kName];
+            alert("Key: " + kName + "\\nValue: " + k.Value + "\\nType: " + k.Type);
         }
 
         function copyText(t) { navigator.clipboard.writeText(t).then(()=>showToast("Copied")); }
@@ -788,8 +809,8 @@
         function showToast(m) { const t=document.getElementById('toast'); t.querySelector('span').innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
         let themes = ['cyberpunk', 'blood', 'matrix', 'naruto']; let curTheme = 0;
         function toggleTheme() { curTheme = (curTheme+1)%themes.length; document.documentElement.setAttribute('data-theme', themes[curTheme]); accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(); }
-        function initParts() { cvs.width=window.innerWidth; cvs.height=window.innerHeight; for(let i=0;i<50;i++)parts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,v:(Math.random()*0.5)+0.2,s:Math.random()*2}); anim(); }
-        function anim() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle=accent; ctx.globalAlpha=0.4; parts.forEach(p=>{p.y-=p.v;if(p.y<0)p.y=cvs.height;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill();}); requestAnimationFrame(anim); }
+        function initParts() { cvs.width=window.innerWidth; cvs.height=window.innerHeight; for(let i=0;i<50;i++)partsArr.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,v:(Math.random()*0.5)+0.2,s:Math.random()*2}); anim(); }
+        function anim() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle=accent; ctx.globalAlpha=0.4; partsArr.forEach(p=>{p.y-=p.v;if(p.y<0)p.y=cvs.height;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill();}); requestAnimationFrame(anim); }
         window.addEventListener('resize', ()=>{cvs.width=window.innerWidth;cvs.height=window.innerHeight;});
         document.documentElement.setAttribute('data-theme', 'cyberpunk');
         initParts();
@@ -798,7 +819,6 @@
 </body>
 </html>`;
 
-            // 3. Download File
             const blob = new Blob([childHtml], {type: "text/html"});
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
