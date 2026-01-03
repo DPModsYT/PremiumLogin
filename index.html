@@ -8,195 +8,127 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- CORE ANIMATIONS --- */
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px var(--accent-dim); } 50% { box-shadow: 0 0 25px var(--accent); } 100% { box-shadow: 0 0 10px var(--accent-dim); } }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
-
-        /* --- THEME VARIABLES --- */
+        /* --- CORE VARIABLES --- */
         :root {
-            --bg-grad: linear-gradient(135deg, #050508, #0a0a12);
-            --card: rgba(14, 14, 20, 0.6);
-            --nav: rgba(22, 22, 33, 0.8);
-            --accent: #00e5ff; --accent-dim: rgba(0, 229, 255, 0.1);
-            --text: #ffffff; --muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg: #050508; --card: #0e0e14; --nav: #161621; 
+            --accent: #00e5ff; --text: #ffffff; --muted: #94a3b8; 
+            --border: rgba(255, 255, 255, 0.08); 
             --green: #00ff9d; --red: #ff0055; --warn: #f59e0b;
-            --glass: blur(20px) saturate(180%);
-            --shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+            --glass: blur(16px) saturate(180%);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* --- COMPLEX ANIMATED THEMES --- */
-        [data-theme="Cyberpunk"] {
-            --bg-grad: linear-gradient(45deg, #050508, #11001c, #00121c);
-            --accent: #00e5ff; --accent-dim: rgba(0, 229, 255, 0.2);
-            --card: rgba(10, 10, 20, 0.7);
-        }
-        [data-theme="Matrix"] {
-            --bg-grad: radial-gradient(circle at center, #001a00, #000000);
-            --accent: #00ff41; --accent-dim: rgba(0, 255, 65, 0.15);
-            --text: #e0ffe0; --muted: #4a804a;
-            --card: rgba(0, 20, 0, 0.8);
-            --border: rgba(0, 255, 65, 0.2);
-        }
-        [data-theme="Blood"] {
-            --bg-grad: linear-gradient(180deg, #1a0000, #000000);
-            --accent: #ff0033; --accent-dim: rgba(255, 0, 51, 0.2);
-            --text: #ffebeb; --muted: #804040;
-            --card: rgba(30, 0, 0, 0.6);
-            --green: #ff3333; /* Make success red too */
-        }
-        [data-theme="Ocean"] {
-            --bg-grad: linear-gradient(to top, #00111a, #00334d);
-            --accent: #00ccff; --accent-dim: rgba(0, 204, 255, 0.2);
-            --card: rgba(0, 30, 50, 0.6);
-        }
-        [data-theme="Gold"] {
-            --bg-grad: linear-gradient(135deg, #0f0d00, #1f1a00, #000000);
-            --accent: #ffd700; --accent-dim: rgba(255, 215, 0, 0.15);
-            --text: #fffbe6; --muted: #998844;
-            --card: rgba(20, 18, 0, 0.6);
-        }
-        [data-theme="Violet"] {
-            --bg-grad: linear-gradient(to right, #0f001a, #2d004d);
-            --accent: #d400ff; --accent-dim: rgba(212, 0, 255, 0.2);
-            --text: #f3e6ff;
-        }
+        /* --- THEMES --- */
+        [data-theme="Cyberpunk"] { --bg:#050508; --card:#0e0e14; --nav:#161621; --accent:#00e5ff; }
+        [data-theme="Matrix"] { --bg:#000000; --card:#051a05; --nav:#001100; --accent:#00ff00; --green:#00ff00; --red:#008800; --text:#e0ffe0; }
+        [data-theme="Blood"] { --bg:#1a0000; --card:#2b0a0a; --nav:#360000; --accent:#ff0000; --green:#ff3333; --red:#ff0000; --text:#ffebeb; }
+        [data-theme="Ocean"] { --bg:#00111a; --card:#002233; --nav:#00334d; --accent:#00ccff; --text:#e0ffff; }
+        [data-theme="Gold"] { --bg:#0f0d00; --card:#1f1a00; --nav:#2d2600; --accent:#ffd700; --text:#fffbe6; }
+        [data-theme="Violet"] { --bg:#0f001a; --card:#1f0033; --nav:#2d004d; --accent:#d400ff; --text:#f3e6ff; }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
+        body { margin: 0; padding: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 120px; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         
-        body { 
-            margin: 0; padding: 0; 
-            font-family: 'Outfit', sans-serif; 
-            background: var(--bg-grad); 
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text); 
-            min-height: 100vh; 
-            padding-bottom: 120px; 
-            overflow-x: hidden; 
-            transition: color 0.4s ease;
-        }
-        
-        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.5; mix-blend-mode: screen; }
+        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
         /* --- HEADER --- */
-        header { 
-            position: sticky; top: 0; z-index: 50; 
-            background: rgba(0,0,0,0.1); 
-            backdrop-filter: var(--glass); 
-            border-bottom: 1px solid var(--border); 
-            padding: 15px 24px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-        .brand { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; text-shadow: 0 0 20px var(--accent); }
+        header { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.7); backdrop-filter: var(--glass); border-bottom: 1px solid var(--border); padding: 15px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
         .brand i { color: var(--accent); filter: drop-shadow(0 0 8px var(--accent)); }
         
-        .icon-btn { width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .icon-btn:active { transform: scale(0.9); background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
+        .icon-btn { width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .icon-btn:active { transform: scale(0.9); background: var(--accent); color: #000; }
 
         /* --- LAYOUT --- */
         .container { max-width: 650px; margin: 0 auto; padding: 20px; }
         .hidden { display: none !important; }
 
         /* --- CONTROLS --- */
-        .controls { display: flex; gap: 12px; margin-bottom: 25px; align-items: center; animation: slideIn 0.4s ease; }
+        .controls { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; }
         .search-box { position: relative; flex: 1; }
         .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-        .input-glass { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 14px 14px 14px 44px; color: var(--text); border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 0.95rem; transition: 0.3s; backdrop-filter: blur(10px); }
-        .input-glass:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-dim); background: rgba(0,0,0,0.5); }
+        .input-glass { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 14px 14px 14px 44px; color: var(--text); border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 0.95rem; }
+        .input-glass:focus { border-color: var(--accent); }
 
-        .btn-gradient { background: linear-gradient(135deg, var(--accent), var(--green)); color: #000; border: none; padding: 0 24px; height: 48px; border-radius: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 5px 20px -5px var(--accent); transition: 0.3s; letter-spacing: 0.5px; }
-        .btn-gradient:active { transform: scale(0.95); box-shadow: 0 2px 10px -2px var(--accent); }
-
-        /* --- CARDS (PREMIUM) --- */
-        .glass-card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 24px; 
-            padding: 20px; 
-            margin-bottom: 15px; 
-            position: relative; 
-            backdrop-filter: blur(25px); 
-            transition: 0.3s; 
-            display: flex; flex-direction: column; gap: 12px; 
-            box-shadow: var(--shadow);
-            animation: slideIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .glass-card:hover { border-color: var(--accent); box-shadow: 0 10px 40px -10px var(--accent-dim); transform: translateY(-3px); }
-
+        .btn-gradient { background: linear-gradient(135deg, var(--accent), var(--green)); color: #000; border: none; padding: 0 20px; height: 48px; border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 5px 15px -5px var(--accent); }
+        
+        /* --- CARDS --- */
+        .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 12px; position: relative; backdrop-filter: blur(10px); transition: 0.2s; display: flex; flex-direction: column; gap: 10px; }
+        
         .key-row-top { display: flex; justify-content: space-between; align-items: center; }
-        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; font-size: 1.05rem; word-break: break-all; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
-        .key-title i { font-size: 0.9rem; opacity: 0.4; transition: 0.2s; }
-        .key-title:hover { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        
+        .key-title { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; font-size: 1rem; word-break: break-all; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+        .key-title:active { color: var(--accent); }
+        .key-title i { font-size: 0.8rem; opacity: 0.5; transition: 0.2s; }
         .key-title:hover i { opacity: 1; color: var(--accent); }
         
-        .badge { padding: 5px 12px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .badge.dur { background: rgba(0, 229, 255, 0.1); color: var(--accent); border: 1px solid rgba(0, 229, 255, 0.3); }
-        .badge.fix { background: rgba(245, 158, 11, 0.1); color: var(--warn); border: 1px solid rgba(245, 158, 11, 0.3); }
-        .badge.life { background: rgba(0, 255, 157, 0.1); color: var(--green); border: 1px solid rgba(0, 255, 157, 0.3); }
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+        .badge.dur { background: rgba(0, 229, 255, 0.15); color: var(--accent); }
+        .badge.fix { background: rgba(245, 158, 11, 0.15); color: var(--warn); }
+        .badge.life { background: rgba(0, 255, 157, 0.15); color: var(--green); }
 
-        .key-details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 12px; margin-top: 5px; }
-        .detail-item { display: flex; align-items: center; gap: 8px; }
-        .detail-item i { color: var(--accent); filter: drop-shadow(0 0 5px var(--accent)); }
+        .key-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.8rem; color: var(--muted); }
+        .detail-item { display: flex; align-items: center; gap: 6px; }
+        .detail-item i { color: var(--accent); }
 
-        .key-actions-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
-        .btn-mini { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.95rem; }
+        .key-actions-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+        .btn-mini { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
         .btn-view { background: rgba(255,255,255,0.05); color: var(--muted); border-color: var(--border); }
-        .btn-view:hover { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .btn-view:hover { background: var(--accent); color: #000; }
         .btn-edit { background: rgba(245, 158, 11, 0.1); color: var(--warn); border-color: rgba(245, 158, 11, 0.3); }
-        .btn-edit:hover { background: var(--warn); color: #000; border-color: var(--warn); box-shadow: 0 0 15px var(--warn); }
+        .btn-edit:hover { background: var(--warn); color: #000; }
         .btn-del { background: rgba(255,0,85,0.1); color: var(--red); border-color: rgba(255,0,85,0.3); }
-        .btn-del:hover { background: var(--red); color: #fff; border-color: var(--red); box-shadow: 0 0 15px var(--red); }
+        .btn-del:hover { background: var(--red); color: #fff; }
 
         /* --- CONFIG FORM --- */
-        .cfg-section { margin-bottom: 35px; animation: slideIn 0.5s ease; }
-        .cfg-head { color: var(--accent); font-weight: 800; font-size: 0.8rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; justify-content: space-between; gap: 8px; opacity: 0.9; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .cfg-section { margin-bottom: 25px; }
+        .cfg-head { color: var(--accent); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
         
-        .inp-label { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; margin-top: 18px; letter-spacing: 1px; }
-        .inp-field { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 16px; color: #fff; border-radius: 14px; font-family: 'Outfit', sans-serif; transition: 0.3s; }
-        .inp-field:focus { border-color: var(--accent); background: rgba(0,0,0,0.5); box-shadow: 0 0 15px var(--accent-dim); }
-        select.inp-field { color: #fff; background-color: rgba(0,0,0,0.3); -webkit-appearance: none; cursor: pointer; }
-        select.inp-field option { background-color: #0e0e14; color: #fff; padding: 12px; }
+        .inp-label { display: block; color: var(--muted); font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; margin-top: 12px; }
+        .inp-field { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; color: #fff; border-radius: 10px; font-family: 'Outfit', sans-serif; }
+        select.inp-field { color: #fff; background-color: rgba(255,255,255,0.03); -webkit-appearance: none; }
+        select.inp-field option { background-color: #000; color: #fff; padding: 10px; }
         
-        /* --- PROPER TOGGLE SWITCH (GLOWING) --- */
-        .switch { position: relative; display: inline-block; width: 54px; height: 30px; }
+        /* --- PROPER TOGGLE SWITCH --- */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.05); border: 1px solid var(--border); -webkit-transition: .4s; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: #fff; -webkit-transition: .4s; transition: .4s; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
-        input:checked + .slider { background-color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
-        input:checked + .slider:before { -webkit-transform: translateX(24px); -ms-transform: translateX(24px); transform: translateX(24px); background-color: #000; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); border: 1px solid var(--border); -webkit-transition: .4s; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: #fff; -webkit-transition: .4s; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        input:checked + .slider { background-color: var(--accent); border-color: var(--accent); }
+        input:checked + .slider:before { -webkit-transform: translateX(22px); -ms-transform: translateX(22px); transform: translateX(22px); background-color: #000; }
 
-        /* --- NAV DOCK (FLOATING) --- */
-        .nav-dock { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 500px; height: 80px; background: var(--nav); border: 1px solid var(--border); border-radius: 28px; display: flex; justify-content: space-evenly; align-items: center; box-shadow: 0 20px 60px rgba(0,0,0,0.7); backdrop-filter: var(--glass); z-index: 100; padding: 0 10px; animation: slideIn 0.6s ease; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); font-size: 1.3rem; transition: 0.3s; cursor: pointer; height: 100%; position: relative; opacity: 0.6; }
-        .nav-item.active { color: var(--accent); transform: translateY(-5px); opacity: 1; }
-        .nav-item.active i { filter: drop-shadow(0 0 12px var(--accent)); }
-        .nav-lbl { font-size: 0.65rem; font-weight: 800; margin-top: 5px; letter-spacing: 1px; }
+        /* --- NAV DOCK --- */
+        .nav-dock { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 500px; height: 75px; background: var(--nav); border: 1px solid var(--border); border-radius: 24px; display: flex; justify-content: space-evenly; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6); backdrop-filter: var(--glass); z-index: 100; padding: 0 10px; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); font-size: 1.2rem; transition: 0.3s; cursor: pointer; height: 100%; position: relative; }
+        .nav-item.active { color: var(--accent); transform: translateY(-3px); }
+        .nav-item.active i { filter: drop-shadow(0 0 8px var(--accent)); }
+        .nav-lbl { font-size: 0.65rem; font-weight: 700; margin-top: 4px; opacity: 0.7; }
 
         /* --- TYPE SELECTOR --- */
-        .type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .type-opt { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 14px; border-radius: 12px; text-align: center; cursor: pointer; font-size: 0.85rem; font-weight: 700; transition: 0.2s; color: var(--muted); }
-        .type-opt:hover { background: rgba(255,255,255,0.08); }
-        .type-opt.selected { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 5px 20px -5px var(--accent); }
+        .type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .type-opt { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: 0.2s; color: var(--muted); }
+        .type-opt.selected { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 4px 12px -4px var(--accent); }
 
         /* --- MODALS --- */
-        .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:200; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(10px); opacity:0; pointer-events:none; transition:0.3s; }
+        .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:200; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px); opacity:0; pointer-events:none; transition:0.3s; }
         .modal-wrap.open { opacity:1; pointer-events:all; }
-        .modal-card { background: #121218; width:90%; max-width:400px; padding:30px; border-radius: 30px; border: 1px solid var(--border); max-height: 85vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.8); animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .modal-card { background: #121218; width:90%; max-width:400px; padding:25px; border-radius: 24px; border: 1px solid var(--border); max-height: 85vh; overflow-y: auto; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        
+        .detail-group { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .detail-lbl { font-size: 0.7rem; color: var(--accent); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
+        .detail-val { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #fff; word-break: break-all; }
         
         /* --- PANEL THEME GRID --- */
-        .panel-theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .panel-theme-btn { padding: 18px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; text-align: center; cursor: pointer; transition: 0.2s; font-weight: 700; color: var(--muted); letter-spacing: 1px; font-size: 0.8rem; }
+        .panel-theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .panel-theme-btn { padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; font-weight: 700; color: var(--muted); }
         .panel-theme-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
-        .panel-theme-btn.active { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); box-shadow: 0 0 20px var(--accent-dim); }
+        .panel-theme-btn.active { border-color: var(--accent); background: rgba(0, 229, 255, 0.1); color: var(--accent); }
 
-        .device-item { font-size: 0.8rem; padding: 12px 15px; background: rgba(0,0,0,0.4); border-radius: 10px; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; border-left: 3px solid var(--muted); display: flex; justify-content: space-between; align-items: center; }
-        .device-item.active { border-left-color: var(--green); background: rgba(0, 255, 157, 0.05); }
-        .footer-brand { text-align: center; color: var(--muted); font-size: 0.7rem; margin-top: 40px; opacity: 0.4; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
-        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--nav); border: 1px solid var(--accent); padding: 14px 30px; border-radius: 50px; z-index: 300; display: flex; align-items: center; gap: 12px; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); font-weight: 700; box-shadow: 0 10px 40px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .device-list { margin-top: 5px; max-height: 150px; overflow-y: auto; }
+        .device-item { font-size: 0.75rem; padding: 8px 10px; background: rgba(0,0,0,0.3); border-radius: 6px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; border-left: 2px solid var(--muted); display: flex; justify-content: space-between; align-items: center; }
+        .device-item.active { border-left-color: var(--green); }
+        .footer-brand { text-align: center; color: var(--muted); font-size: 0.7rem; margin-top: 30px; opacity: 0.5; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--nav); border: 1px solid var(--accent); padding: 12px 24px; border-radius: 50px; z-index: 300; display: flex; align-items: center; gap: 10px; transition: 0.4s; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -239,7 +171,7 @@
 
             <div id="tabDevices" class="hidden">
                 <div class="controls">
-                    <div style="font-weight:700; font-size:1.2rem; flex:1; letter-spacing:-0.5px;">Active Devices</div>
+                    <div style="font-weight:700; font-size:1.1rem; flex:1;">Active Devices</div>
                     <button class="btn-gradient" onclick="openAddDeviceModal(true)"><i class="fas fa-link"></i> LINK DEVICE</button>
                 </div>
                 <div id="deviceGlobalList"></div>
@@ -297,7 +229,7 @@
                         <div class="inp-label">BG URL</div> <input type="text" class="inp-field" id="cfgBg">
                         <div class="inp-label">PROFILE URL</div> <input type="text" class="inp-field" id="cfgProf">
                         
-                        <div class="inp-label">ADMIN BUTTON TEXT</div> <input type="text" class="inp-field" id="cfgBtnAdmin" placeholder="e.g. Help">
+                        <div class="inp-label">ADMIN BUTTON TEXT</div> <input type="text" class="inp-field" id="cfgBtnAdmin" placeholder="Help">
                     </div>
 
                     <div class="cfg-section">
@@ -327,7 +259,7 @@
                     </div>
 
                     <button class="btn-gradient" style="width:100%; justify-content:center;" onclick="saveConfig()">SAVE CHANGES</button>
-                    <button class="btn-text" style="width:100%; margin-top:20px; color:var(--muted); background:none; border:none;" onclick="hardReset()">DISCONNECT</button>
+                    <button class="btn-text" style="width:100%; margin-top:15px; color:var(--muted); background:none; border:none;" onclick="hardReset()">DISCONNECT</button>
                 </div>
             </div>
 
@@ -349,7 +281,7 @@
 
     <div id="panelThemeModal" class="modal-wrap">
         <div class="modal-card">
-            <h3 style="margin-top:0; color:#fff; margin-bottom:20px; text-align:center;">Select Theme</h3>
+            <h3 style="margin-top:0; color:#fff; margin-bottom:15px;">Panel Theme</h3>
             <div class="panel-theme-grid">
                 <div class="panel-theme-btn" onclick="setPanelTheme('Cyberpunk')">CYBERPUNK</div>
                 <div class="panel-theme-btn" onclick="setPanelTheme('Matrix')">MATRIX</div>
@@ -364,7 +296,7 @@
 
     <div id="genModal" class="modal-wrap">
         <div class="modal-card">
-            <h3 style="margin-top:0; color:#fff; margin-bottom:20px;" id="keyModalTitle">New Key</h3>
+            <h3 style="margin-top:0; color:#fff;" id="keyModalTitle">New Key</h3>
             
             <input type="hidden" id="keyEditMode" value="false">
             <input type="hidden" id="keyOriginalName" value="">
@@ -395,14 +327,14 @@
             <div class="inp-label">MAX DEVICES</div>
             <input type="number" class="inp-field" id="genMax" value="1">
 
-            <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:25px;" onclick="saveKey()" id="keyModalBtn">GENERATE</button>
+            <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:20px;" onclick="saveKey()" id="keyModalBtn">GENERATE</button>
             <button class="btn-text" style="width:100%; color:var(--muted); background:transparent; border:none; margin-top:10px;" onclick="closeModals()">CANCEL</button>
         </div>
     </div>
 
     <div id="addDevModal" class="modal-wrap">
         <div class="modal-card">
-            <h3 style="margin-top:0; color:#fff; margin-bottom:20px;" id="devModalTitle">Link Device</h3>
+            <h3 style="margin-top:0; color:#fff;" id="devModalTitle">Link Device</h3>
             
             <input type="hidden" id="devEditMode" value="false">
             <input type="hidden" id="devOriginalId" value="">
@@ -414,14 +346,14 @@
             <div class="inp-label">ASSIGN TO KEY</div>
             <select class="inp-field" id="newDevKey"></select>
 
-            <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:25px;" onclick="saveDevice()" id="devModalBtn">LINK</button>
+            <button class="btn-gradient" style="width:100%; justify-content:center; margin-top:20px;" onclick="saveDevice()" id="devModalBtn">LINK</button>
             <button class="btn-text" style="width:100%; color:var(--muted); background:transparent; border:none; margin-top:10px;" onclick="closeModals()">CANCEL</button>
         </div>
     </div>
 
     <div id="detailModal" class="modal-wrap">
         <div class="modal-card">
-            <h3 style="margin-top:0; color:#fff; display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin-top:0; color:#fff; display:flex; justify-content:space-between; align-items:center;">
                 <span>Overview</span><i class="fas fa-times" onclick="closeModals()" style="font-size:1.2rem; color:var(--muted); cursor:pointer;"></i>
             </h3>
             <div id="detailContent"></div>
@@ -434,14 +366,115 @@
         let dbUrl = localStorage.getItem("dpAdminUrl");
         let dbData = null;
         
+        // --- ANIMATION SYSTEM ---
+        const cvs = document.getElementById('bgCanvas');
+        const ctx = cvs.getContext('2d');
+        let animationId;
+        let particles = [];
+        let animMode = 'particles'; // particles, matrix, rain, bubbles, sparkles
+
+        function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 1. Matrix Rain
+        function initMatrix() {
+            animMode = 'matrix';
+            particles = Array(Math.floor(cvs.width/14)).fill(1);
+        }
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, cvs.width, cvs.height);
+            ctx.fillStyle = '#00ff41';
+            ctx.font = '14px monospace';
+            particles.forEach((y, i) => {
+                const text = String.fromCharCode(0x30A0 + Math.random()*96);
+                ctx.fillText(text, i*14, y*14);
+                if (y*14 > cvs.height && Math.random() > 0.975) particles[i] = 0;
+                particles[i]++;
+            });
+        }
+
+        // 2. Heavy Rain (Blood)
+        function initRain() {
+            animMode = 'rain';
+            particles = [];
+            for(let i=0; i<100; i++) particles.push({x:Math.random()*cvs.width, y:Math.random()*cvs.height, v:Math.random()*5+5});
+        }
+        function drawRain() {
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            ctx.strokeStyle = '#ff0033';
+            ctx.lineWidth = 2;
+            particles.forEach(p => {
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y+15); ctx.stroke();
+                p.y += p.v; if(p.y > cvs.height) p.y = -20;
+            });
+        }
+
+        // 3. Bubbles (Ocean)
+        function initBubbles() {
+            animMode = 'bubbles';
+            particles = [];
+            for(let i=0; i<40; i++) particles.push({x:Math.random()*cvs.width, y:cvs.height+Math.random()*100, s:Math.random()*5+2, v:Math.random()*1+0.5});
+        }
+        function drawBubbles() {
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            ctx.fillStyle = 'rgba(0, 204, 255, 0.3)';
+            particles.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                p.y -= p.v; if(p.y < -10) p.y = cvs.height + 10;
+            });
+        }
+
+        // 4. Sparkles (Gold)
+        function initSparkles() {
+            animMode = 'sparkles';
+            particles = [];
+            for(let i=0; i<50; i++) particles.push({x:Math.random()*cvs.width, y:Math.random()*cvs.height, s:Math.random()*2, a:Math.random(), d:Math.random()*0.02});
+        }
+        function drawSparkles() {
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            ctx.fillStyle = '#ffd700';
+            particles.forEach(p => {
+                ctx.globalAlpha = Math.abs(Math.sin(p.a));
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                p.a += p.d;
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        // 5. Standard Particles (Cyberpunk/Violet)
+        function initParticles(color) {
+            animMode = 'particles';
+            particles = [];
+            for(let i=0; i<50; i++) particles.push({x:Math.random()*cvs.width, y:Math.random()*cvs.height, vx:(Math.random()-0.5), vy:(Math.random()-0.5), s:Math.random()*2});
+            ctx.fillStyle = color;
+        }
+        function drawParticles() {
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            // ctx color is set in init or theme change
+            ctx.globalAlpha = 0.4;
+            particles.forEach(p => {
+                p.x+=p.vx; p.y+=p.vy;
+                if(p.x<0||p.x>cvs.width) p.vx*=-1; if(p.y<0||p.y>cvs.height) p.vy*=-1;
+                ctx.beginPath(); ctx.arc(p.x,p.y,p.s,0,Math.PI*2); ctx.fill();
+            });
+        }
+
+        // MASTER LOOP
+        function animate() {
+            if(animMode === 'matrix') drawMatrix();
+            else if(animMode === 'rain') drawRain();
+            else if(animMode === 'bubbles') drawBubbles();
+            else if(animMode === 'sparkles') drawSparkles();
+            else drawParticles();
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // --- APP LOGIC ---
         const DEFAULT_JSON = {
             "Config": { "Announcement": {"Message": "", "Show": false, "Title": ""}, "AppVersion": "1.0", "HelpUrl": "", "Maintenance": false, "MaintenanceMessage": "", "Status": "Safe", "Theme": "Cyberpunk", "UI": {"BackgroundUrl": "", "BtnAdmin": "Help", "ProfileUrl": "", "Subtitle": "Dev", "Title": "DPMods"}, "UpdateUrl": "" }, "Keys": {}
         };
-
-        const cvs = document.getElementById('bgCanvas');
-        const ctx = cvs.getContext('2d');
-        let parts = [];
-        let accent = "rgba(0, 229, 255, 0.3)";
 
         function cleanUrl(u) { let s = u.trim(); if(s.includes("firebaseio.com")) s = s.split("firebaseio.com")[0] + "firebaseio.com"; return s + "/.json"; }
         function saveSetupUrl() { const u = document.getElementById('setupInput').value; if(!u) return alert("URL Required"); localStorage.setItem("dpAdminUrl", u); location.reload(); }
@@ -461,6 +494,9 @@
                 if(!data) { await fetch(cleanUrl(dbUrl), { method:'PUT', body:JSON.stringify(DEFAULT_JSON) }); data = DEFAULT_JSON; }
                 dbData = data;
                 
+                // Set Theme on Load
+                if(dbData.Config.Theme) setPanelTheme(dbData.Config.Theme, false); // false = don't close modal
+
                 document.getElementById('loader').classList.add('hidden');
                 switchTab('keys');
                 renderKeys();
@@ -475,9 +511,7 @@
 
         async function sync() { try { await fetch(cleanUrl(dbUrl), { method:'PUT', body:JSON.stringify(dbData) }); showToast("Saved"); } catch(e) { showToast("Error"); } }
 
-        function copyText(t) {
-            navigator.clipboard.writeText(t).then(() => showToast("Copied!")).catch(() => showToast("Failed"));
-        }
+        function copyText(t) { navigator.clipboard.writeText(t).then(() => showToast("Copied!")).catch(() => showToast("Failed")); }
 
         function renderKeys() {
             const list = document.getElementById('keysList');
@@ -489,25 +523,7 @@
                 const k = dbData.Keys[kName];
                 let badge = k.Type==='Fixed'?'fix':(k.Type==='Lifetime'?'life':'dur');
                 let devC = (k.Devices && typeof k.Devices==='object') ? Object.keys(k.Devices).length : 0;
-                
-                list.innerHTML += `
-                <div class="glass-card">
-                    <div class="key-row-top">
-                        <span class="key-title" onclick="copyText('${kName}')">
-                            <i class="fas fa-copy"></i> ${kName}
-                        </span>
-                        <span class="badge ${badge}">${k.Type}</span>
-                    </div>
-                    <div class="key-details">
-                        <div class="detail-item"><i class="fas fa-tag"></i> ${k.Value}</div>
-                        <div class="detail-item"><i class="fas fa-mobile-alt"></i> ${devC} / ${k.MaxDevices}</div>
-                    </div>
-                    <div class="key-actions-row">
-                        <div class="btn-mini btn-view" onclick="viewKey('${kName}')"><i class="fas fa-eye"></i></div>
-                        <div class="btn-mini btn-edit" onclick="openEditKey('${kName}')"><i class="fas fa-pen"></i></div>
-                        <div class="btn-mini btn-del" onclick="delKey('${kName}')"><i class="fas fa-trash"></i></div>
-                    </div>
-                </div>`;
+                list.innerHTML += `<div class="glass-card"><div class="key-row-top"><span class="key-title" onclick="copyText('${kName}')"><i class="fas fa-copy"></i> ${kName}</span><span class="badge ${badge}">${k.Type}</span></div><div class="key-details"><div class="detail-item"><i class="fas fa-tag"></i> ${k.Value}</div><div class="detail-item"><i class="fas fa-mobile-alt"></i> ${devC} / ${k.MaxDevices}</div></div><div class="key-actions-row"><div class="btn-mini btn-view" onclick="viewKey('${kName}')"><i class="fas fa-eye"></i></div><div class="btn-mini btn-edit" onclick="openEditKey('${kName}')"><i class="fas fa-pen"></i></div><div class="btn-mini btn-del" onclick="delKey('${kName}')"><i class="fas fa-trash"></i></div></div></div>`;
             });
         }
 
@@ -530,11 +546,9 @@
             if(!found) div.innerHTML = `<div style="text-align:center;color:var(--muted);margin-top:50px;">No active devices.</div>`;
         }
 
-        // --- KEY ACTIONS ---
         function openGenModal(isNew) {
             const modal = document.getElementById('genModal');
             document.getElementById('keyEditMode').value = !isNew;
-            
             if(isNew) {
                 document.getElementById('keyModalTitle').innerText = "New Key";
                 document.getElementById('keyModalBtn').innerText = "GENERATE";
@@ -547,17 +561,13 @@
         function openEditKey(kName) {
             openGenModal(false);
             const k = dbData.Keys[kName];
-            
             document.getElementById('keyModalTitle').innerText = "Edit Key";
             document.getElementById('keyModalBtn').innerText = "UPDATE";
             document.getElementById('keyOriginalName').value = kName;
-            
             document.getElementById('genName').value = kName;
             document.getElementById('genMax').value = k.MaxDevices || 1;
             document.getElementById('genShowAgain').value = k.ShowAgain || "";
-            
             selectType(k.Type);
-            
             if(k.Type === 'Duration') document.getElementById('genValDur').value = k.Value;
             if(k.Type === 'Fixed') {
                 let p = k.Value.split('-');
@@ -569,38 +579,20 @@
             const mode = document.getElementById('keyEditMode').value === 'true';
             const origName = document.getElementById('keyOriginalName').value;
             const name=document.getElementById('genName').value, type=document.getElementById('genType').value, max=document.getElementById('genMax').value, show=document.getElementById('genShowAgain').value;
-            
-            let val=""; 
-            if(type==='Duration')val=document.getElementById('genValDur').value; 
-            else if(type==='Fixed'){const d=document.getElementById('genValFix').value; if(d)val=d.split('-').reverse().join('-');} 
-            else val=0;
-
-            if(!name) return alert("Name req"); 
-            if(!val && type!=='Lifetime') return alert("Value req");
-
-            if(mode && origName && origName !== name) { delete dbData.Keys[origName]; }
-
-            const newKey = { 
-                "ActivatedAt": (mode && dbData.Keys[origName]?.ActivatedAt) || 0, 
-                "Devices": (mode && dbData.Keys[origName]?.Devices) || "null", 
-                "MaxDevices": parseInt(max)||1, 
-                "Type": type, 
-                "Value": val 
-            };
+            let val=""; if(type==='Duration')val=document.getElementById('genValDur').value; else if(type==='Fixed'){const d=document.getElementById('genValFix').value; if(d)val=d.split('-').reverse().join('-');} else val=0;
+            if(!name) return alert("Name req"); if(!val && type!=='Lifetime') return alert("Value req");
+            if(mode && origName && origName !== name) delete dbData.Keys[origName];
+            const newKey = { "ActivatedAt": (mode && dbData.Keys[origName]?.ActivatedAt) || 0, "Devices": (mode && dbData.Keys[origName]?.Devices) || "null", "MaxDevices": parseInt(max)||1, "Type": type, "Value": val };
             if(show) newKey.ShowAgain = show;
-            
-            dbData.Keys[name] = newKey; 
-            closeModals(); renderKeys(); sync();
+            dbData.Keys[name] = newKey; closeModals(); renderKeys(); sync();
         }
 
         function delKey(k) { if(confirm("Delete?")) { delete dbData.Keys[k]; renderKeys(); sync(); } }
 
-        // --- DEVICE ACTIONS ---
         function openAddDeviceModal(isNew) {
             const sel=document.getElementById('newDevKey'); sel.innerHTML=""; 
             Object.keys(dbData.Keys).forEach(k=>sel.innerHTML+=`<option value="${k}">${k}</option>`);
             document.getElementById('devEditMode').value = !isNew;
-            
             if(isNew) {
                 document.getElementById('devModalTitle').innerText = "Link Device";
                 document.getElementById('devModalBtn').innerText = "LINK";
@@ -623,25 +615,20 @@
             const mode = document.getElementById('devEditMode').value === 'true';
             const d=document.getElementById('newDevId').value, k=document.getElementById('newDevKey').value;
             const origD=document.getElementById('devOriginalId').value, origK=document.getElementById('devOriginalKey').value;
-
             if(!d||!k)return alert("Empty"); 
-
             if(mode) {
                 if(dbData.Keys[origK]?.Devices && dbData.Keys[origK].Devices[origD]) {
                     delete dbData.Keys[origK].Devices[origD];
                     if(Object.keys(dbData.Keys[origK].Devices).length===0) dbData.Keys[origK].Devices="null";
                 }
             }
-
             if(!dbData.Keys[k].Devices || dbData.Keys[k].Devices==="null") dbData.Keys[k].Devices={}; 
             dbData.Keys[k].Devices[d]=true; 
-            
             closeModals(); renderDevices(); sync();
         }
 
         function unlinkDevice(k, d) { if(confirm("Unlink?")) { delete dbData.Keys[k].Devices[d]; if(Object.keys(dbData.Keys[k].Devices).length===0) dbData.Keys[k].Devices="null"; renderDevices(); sync(); } }
 
-        // --- CONFIG & UTILS ---
         function fillConfig() {
             const c = dbData.Config;
             document.getElementById('cfgStatus').value = c.Status || "Safe";
@@ -650,16 +637,13 @@
             document.getElementById('cfgSub').value = c.UI?.Subtitle || "";
             document.getElementById('cfgBg').value = c.UI?.BackgroundUrl || "";
             document.getElementById('cfgProf').value = c.UI?.ProfileUrl || "";
-            document.getElementById('cfgBtnAdmin').value = c.UI?.BtnAdmin || "Help"; // FILL BTN ADMIN
-            
+            document.getElementById('cfgBtnAdmin').value = c.UI?.BtnAdmin || "Help"; // FIXED BTN ADMIN
             document.getElementById('cfgVer').value = c.AppVersion || "1.0";
             document.getElementById('urlUpdate').value = c.UpdateUrl || "";
             document.getElementById('urlHelp').value = c.HelpUrl || "";
-            
             document.getElementById('annShow').checked = c.Announcement?.Show || false;
             document.getElementById('annTitle').value = c.Announcement?.Title || "";
             document.getElementById('annMsg').value = c.Announcement?.Message || "";
-            
             document.getElementById('maintShow').checked = c.Maintenance || false;
             document.getElementById('maintMsg').value = c.MaintenanceMessage || "";
         }
@@ -668,24 +652,20 @@
             const c = dbData.Config;
             c.Status = document.getElementById('cfgStatus').value;
             c.Theme = document.getElementById('cfgClientTheme').value;
-            
-            if(!c.UI) c.UI = {}; // Ensure UI exists
+            if(!c.UI) c.UI = {};
             c.UI.Title = document.getElementById('cfgTitle').value;
             c.UI.Subtitle = document.getElementById('cfgSub').value;
             c.UI.BackgroundUrl = document.getElementById('cfgBg').value;
             c.UI.ProfileUrl = document.getElementById('cfgProf').value;
             c.UI.BtnAdmin = document.getElementById('cfgBtnAdmin').value; // SAVE BTN ADMIN
-            
             c.AppVersion = document.getElementById('cfgVer').value;
             c.UpdateUrl = document.getElementById('urlUpdate').value;
             c.HelpUrl = document.getElementById('urlHelp').value;
-            
             c.Announcement.Show = document.getElementById('annShow').checked;
             c.Announcement.Title = document.getElementById('annTitle').value;
             c.Announcement.Message = document.getElementById('annMsg').value;
             c.Maintenance = document.getElementById('maintShow').checked;
             c.MaintenanceMessage = document.getElementById('maintMsg').value;
-            
             sync();
         }
 
@@ -705,21 +685,28 @@
         }
 
         function openPanelThemeModal() { document.getElementById('panelThemeModal').classList.add('open'); }
-        function setPanelTheme(t) {
+        function setPanelTheme(t, close=true) {
             document.documentElement.setAttribute('data-theme', t);
-            accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-            closeModals();
+            if(close) closeModals();
+            
+            // Switch Animation Mode
+            if(t === 'Matrix') initMatrix();
+            else if(t === 'Blood') initRain();
+            else if(t === 'Ocean') initBubbles();
+            else if(t === 'Gold') initSparkles();
+            else if(t === 'Violet') initParticles('#d400ff');
+            else initParticles('#00e5ff'); // Cyberpunk Default
         }
 
         function closeModals() { document.querySelectorAll('.modal-wrap').forEach(m=>m.classList.remove('open')); }
         function hardReset() { localStorage.removeItem("dpAdminUrl"); location.reload(); }
         function showToast(m) { const t=document.getElementById('toast'); t.querySelector('span').innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
 
-        function initParts() { cvs.width=window.innerWidth; cvs.height=window.innerHeight; for(let i=0;i<50;i++)parts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,v:(Math.random()*0.5)+0.2,s:Math.random()*2}); anim(); }
-        function anim() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle=accent; ctx.globalAlpha=0.4; parts.forEach(p=>{p.y-=p.v;if(p.y<0)p.y=cvs.height;ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill();}); requestAnimationFrame(anim); }
-        window.addEventListener('resize', ()=>{cvs.width=window.innerWidth;cvs.height=window.innerHeight;});
-        document.documentElement.setAttribute('data-theme', 'Cyberpunk');
-        initParts();
+        // Start Animation Loop
+        if(animationId) cancelAnimationFrame(animationId);
+        setPanelTheme('Cyberpunk', false); // Default
+        animate();
+
     </script>
 </body>
 </html>
